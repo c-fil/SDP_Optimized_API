@@ -3,7 +3,7 @@
  *  \author Nicola Ferri
  *  \brief L0 command handlers
  */
-//Saluti
+//Ciao Pietro
 
 #include "se3_cmd0.h"
 #include "se3_flash.h"
