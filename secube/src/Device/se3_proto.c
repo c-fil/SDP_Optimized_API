@@ -2,9 +2,8 @@
  *  \file se3_proto.c
  *  \author Nicola Ferri
  *  \brief USB read/write handlers
- *  //holaaaa
+ * uu //holaaaa
  */
-
 #include "se3_proto.h"
 #ifndef CUBESIM
 #include <se3_sdio.h>
