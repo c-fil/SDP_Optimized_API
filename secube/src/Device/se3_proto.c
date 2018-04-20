@@ -10,7 +10,7 @@
 #endif
 
 /** \brief Check if block contains the magic sequence
- *  \param buf pointer to block data
+ *  \param buf pointer to block data HOLAAAAAA
  *  \return true if the block contains the magic sequence, otherwise false
  *  
  *  Check if a block of data contains the magic sequence, used to initialize the special
