@@ -45,6 +45,8 @@
 #include "gpio.h"
 #include "fmc.h"
 
+//Franco kernel
+
 /* USER CODE BEGIN Includes */
 #include "se3c0.h"
 #include "se3c1.h"
