@@ -4,6 +4,8 @@
  *  \brief L1 structures and functions
  */
 
+// Buenas tardes
+
 #include "se3c1.h"
 #include "se3_flash.h"
 #include "se3_cmd1.h"
