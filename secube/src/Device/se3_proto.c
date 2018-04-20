@@ -2,15 +2,15 @@
  *  \file se3_proto.c
  *  \author Nicola Ferri
  *  \brief USB read/write handlers
+ * uu //holaaabbbba
  */
-
 #include "se3_proto.h"
 #ifndef CUBESIM
 #include <se3_sdio.h>
 #endif
 
 /** \brief Check if block contains the magic sequence
- *  \param buf pointer to block data
+ *  \param buf pointer to block data HOLAAAAAA
  *  \return true if the block contains the magic sequence, otherwise false
  *  
  *  Check if a block of data contains the magic sequence, used to initialize the special
