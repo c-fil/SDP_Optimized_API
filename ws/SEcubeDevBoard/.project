@@ -26,211 +26,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Application/SW4STM32/startup_stm32f429xx.s</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f429xx.s</locationURI>
-		</link>
-		<link>
-			<name>Application/src/adc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/adc.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/adc.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/adc.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/crc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/crc.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/crc.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/crc.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/dma.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/dma.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/dma.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/dma.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/fmc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/fmc.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/fmc.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/fmc.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/gpio.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/gpio.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/gpio.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/gpio.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/i2c.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/i2c.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/i2c.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/i2c.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/main.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/main.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/mxconstants.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/mxconstants.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/rng.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/rng.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/rng.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/rng.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/sdio.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/sdio.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/sdio.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/sdio.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/se3_rand.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/se3_rand.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/se3_rand.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/se3_rand.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/se3_sdio.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/se3_sdio.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/se3_sdio.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/se3_sdio.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/spi.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/spi.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/spi.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/spi.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/stm32f4xx_hal_conf.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/stm32f4xx_hal_conf.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/stm32f4xx_hal_msp.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/stm32f4xx_hal_msp.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/stm32f4xx_it.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/stm32f4xx_it.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/stm32f4xx_it.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/stm32f4xx_it.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/tim.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/tim.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/tim.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/tim.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/usart.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usart.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/usart.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usart.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/usb_device.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usb_device.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/usb_device.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usb_device.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/usbd_conf.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_conf.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/usbd_conf.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_conf.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/usbd_desc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_desc.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/usbd_desc.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_desc.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/usbd_storage_if.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_storage_if.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/usbd_storage_if.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_storage_if.h</locationURI>
-		</link>
-		<link>
 			<name>Drivers/CMSIS/system_stm32f4xx.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c</locationURI>
@@ -431,242 +226,447 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Class/MSC/Src/usbd_msc_scsi.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/aes256.c</name>
+			<name>Drivers/Application/SW4STM32/startup_stm32f429xx.s</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f429xx.s</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/adc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/adc.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/adc.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/adc.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/crc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/crc.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/crc.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/crc.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/dma.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/dma.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/dma.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/dma.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/fmc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/fmc.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/fmc.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/fmc.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/gpio.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/gpio.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/gpio.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/gpio.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/i2c.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/i2c.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/i2c.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/i2c.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/main.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/main.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/mxconstants.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/mxconstants.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/rng.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/rng.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/rng.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/rng.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/sdio.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/sdio.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/sdio.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/sdio.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/se3_rand.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/se3_rand.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/se3_rand.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/se3_rand.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/se3_sdio.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/se3_sdio.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/se3_sdio.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/se3_sdio.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/spi.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/spi.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/spi.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/spi.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/stm32f4xx_hal_conf.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/stm32f4xx_hal_conf.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/stm32f4xx_hal_msp.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/stm32f4xx_hal_msp.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/stm32f4xx_it.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/stm32f4xx_it.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/stm32f4xx_it.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/stm32f4xx_it.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/tim.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/tim.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/tim.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/tim.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/usart.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usart.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/usart.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usart.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/usb_device.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usb_device.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/usb_device.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usb_device.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/usbd_conf.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_conf.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/usbd_conf.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_conf.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/usbd_desc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_desc.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/usbd_desc.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_desc.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/usbd_storage_if.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_storage_if.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/usbd_storage_if.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/secube/src/usbd_storage_if.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/Application/src/Common/aes256.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/aes256.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/aes256.h</name>
+			<name>Drivers/Application/src/Common/aes256.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/aes256.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/crc16.c</name>
+			<name>Drivers/Application/src/Common/crc16.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/crc16.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/crc16.h</name>
+			<name>Drivers/Application/src/Common/crc16.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/crc16.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/pbkdf2.c</name>
+			<name>Drivers/Application/src/Common/pbkdf2.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/pbkdf2.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/pbkdf2.h</name>
+			<name>Drivers/Application/src/Common/pbkdf2.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/pbkdf2.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/se3_common.c</name>
+			<name>Drivers/Application/src/Common/se3_common.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/se3_common.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/se3_common.h</name>
+			<name>Drivers/Application/src/Common/se3_common.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/se3_common.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/se3c0def.h</name>
+			<name>Drivers/Application/src/Common/se3c0def.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/se3c0def.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/se3c1def.h</name>
+			<name>Drivers/Application/src/Common/se3c1def.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/se3c1def.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/sha256.c</name>
+			<name>Drivers/Application/src/Common/sha256.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/sha256.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Common/sha256.h</name>
+			<name>Drivers/Application/src/Common/sha256.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/sha256.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_algo_Aes.c</name>
+			<name>Drivers/Application/src/Device/se3_algo_Aes.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_Aes.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_algo_Aes.h</name>
+			<name>Drivers/Application/src/Device/se3_algo_Aes.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_Aes.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_algo_AesHmacSha256s.c</name>
+			<name>Drivers/Application/src/Device/se3_algo_AesHmacSha256s.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_AesHmacSha256s.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_algo_AesHmacSha256s.h</name>
+			<name>Drivers/Application/src/Device/se3_algo_AesHmacSha256s.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_AesHmacSha256s.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_algo_HmacSha256.c</name>
+			<name>Drivers/Application/src/Device/se3_algo_HmacSha256.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_HmacSha256.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_algo_HmacSha256.h</name>
+			<name>Drivers/Application/src/Device/se3_algo_HmacSha256.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_HmacSha256.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_algo_aes256hmacsha256.c</name>
+			<name>Drivers/Application/src/Device/se3_algo_aes256hmacsha256.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_aes256hmacsha256.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_algo_aes256hmacsha256.h</name>
+			<name>Drivers/Application/src/Device/se3_algo_aes256hmacsha256.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_aes256hmacsha256.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_algo_sha256.c</name>
+			<name>Drivers/Application/src/Device/se3_algo_sha256.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_sha256.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_algo_sha256.h</name>
+			<name>Drivers/Application/src/Device/se3_algo_sha256.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_sha256.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd.c</name>
+			<name>Drivers/Application/src/Device/se3_cmd.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd.h</name>
+			<name>Drivers/Application/src/Device/se3_cmd.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd0.c</name>
+			<name>Drivers/Application/src/Device/se3_cmd0.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd0.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd0.h</name>
+			<name>Drivers/Application/src/Device/se3_cmd0.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd0.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd1.c</name>
+			<name>Drivers/Application/src/Device/se3_cmd1.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd1.h</name>
+			<name>Drivers/Application/src/Device/se3_cmd1.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd1_config.c</name>
+			<name>Drivers/Application/src/Device/se3_cmd1_config.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1_config.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd1_config.h</name>
+			<name>Drivers/Application/src/Device/se3_cmd1_config.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1_config.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd1_crypto.c</name>
+			<name>Drivers/Application/src/Device/se3_cmd1_crypto.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1_crypto.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd1_crypto.h</name>
+			<name>Drivers/Application/src/Device/se3_cmd1_crypto.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1_crypto.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd1_keys.c</name>
+			<name>Drivers/Application/src/Device/se3_cmd1_keys.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1_keys.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd1_keys.h</name>
+			<name>Drivers/Application/src/Device/se3_cmd1_keys.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1_keys.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd1_login.c</name>
+			<name>Drivers/Application/src/Device/se3_cmd1_login.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1_login.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd1_login.h</name>
+			<name>Drivers/Application/src/Device/se3_cmd1_login.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1_login.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_flash.c</name>
+			<name>Drivers/Application/src/Device/se3_flash.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_flash.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_flash.h</name>
+			<name>Drivers/Application/src/Device/se3_flash.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_flash.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_keys.c</name>
+			<name>Drivers/Application/src/Device/se3_keys.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_keys.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_keys.h</name>
+			<name>Drivers/Application/src/Device/se3_keys.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_keys.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_memory.c</name>
+			<name>Drivers/Application/src/Device/se3_memory.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_memory.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_memory.h</name>
+			<name>Drivers/Application/src/Device/se3_memory.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_memory.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_proto.c</name>
+			<name>Drivers/Application/src/Device/se3_proto.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_proto.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_proto.h</name>
+			<name>Drivers/Application/src/Device/se3_proto.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_proto.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3c0.c</name>
+			<name>Drivers/Application/src/Device/se3c0.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3c0.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3c0.h</name>
+			<name>Drivers/Application/src/Device/se3c0.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3c0.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3c1.c</name>
+			<name>Drivers/Application/src/Device/se3c1.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3c1.c</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3c1.h</name>
+			<name>Drivers/Application/src/Device/se3c1.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3c1.h</locationURI>
 		</link>

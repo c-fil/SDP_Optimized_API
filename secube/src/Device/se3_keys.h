@@ -30,15 +30,15 @@ typedef struct se3_flash_key_ {
 } se3_flash_key;
 
 /** Flash key fields */
-enum {
-    SE3_FLASH_KEY_OFF_ID = 0,
-    SE3_FLASH_KEY_OFF_VALIDITY = 4,
-    SE3_FLASH_KEY_OFF_DATA_LEN = 8,
-    SE3_FLASH_KEY_OFF_NAME_LEN = 10,
-    SE3_FLASH_KEY_OFF_NAME_AND_DATA = 12,
-
-    SE3_FLASH_KEY_SIZE_HEADER = SE3_FLASH_KEY_OFF_NAME_AND_DATA
-};
+//enum {
+//    SE3_FLASH_KEY_OFF_ID = 0,
+//    SE3_FLASH_KEY_OFF_VALIDITY = 4,
+//    SE3_FLASH_KEY_OFF_DATA_LEN = 8,
+//    SE3_FLASH_KEY_OFF_NAME_LEN = 10,
+//    SE3_FLASH_KEY_OFF_NAME_AND_DATA = 12,
+//
+//    SE3_FLASH_KEY_SIZE_HEADER = SE3_FLASH_KEY_OFF_NAME_AND_DATA
+//};
 
 /** \brief Find a key
  *
@@ -119,6 +119,6 @@ bool se3_key_write(se3_flash_it* it, se3_flash_key* key);
 void se3_key_fingerprint(se3_flash_key* key, const uint8_t* salt, uint8_t* fingerprint);
 
 
-#define SE3_TYPE_KEY 100
+//#define SE3_TYPE_KEY 100
 
 

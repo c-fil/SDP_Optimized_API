@@ -10,11 +10,11 @@
 #include "se3_common.h"
 
 /** USB data handlers return values */
-enum {
-	SE3_PROTO_OK = 0,  ///< Report OK to the USB HAL
-	SE3_PROTO_FAIL = 1,  ///< Report FAIL to the USB HAL
-	SE3_PROTO_BUSY = 2  ///< Report BUSY to the USB HAL
-};
+//enum {
+//	SE3_PROTO_OK = 0,  ///< Report OK to the USB HAL
+//	SE3_PROTO_FAIL = 1,  ///< Report FAIL to the USB HAL
+//	SE3_PROTO_BUSY = 2  ///< Report BUSY to the USB HAL
+//};
 
 /** \brief USB data receive handler
  *  
