@@ -16,10 +16,10 @@ typedef struct se3_mem_ {
 	size_t used;
 } se3_mem;
 
-enum {
-	SE3_MEM_HEADER = 4,  ///< entry header size
-	SE3_MEM_BLOCK = 32  ///< memory alignment
-};
+//enum {
+//	SE3_MEM_HEADER = 4,  ///< entry header size
+//	SE3_MEM_BLOCK = 32  ///< memory alignment
+//};
 
 /** \brief initialize memory allocator
  *  \param mem memory buffer object
