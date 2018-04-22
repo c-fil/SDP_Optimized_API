@@ -50,9 +50,9 @@ static int find_magic_index(uint32_t block)
 	return 0;
 }
 
-//enum s3_storage_range_direction {
-//	range_write, range_read
-//};
+enum s3_storage_range_direction {
+	range_write, range_read
+};
 
 /** \brief SDIO read/write request buffer context */
 typedef struct s3_storage_range_ {
