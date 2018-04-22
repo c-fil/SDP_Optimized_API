@@ -129,12 +129,12 @@ void device_init()
 void device_loop()
 {
 	for (;;) {
-		if (se3c0.comm.req_ready) {
-			se3c0.comm.resp_ready = false;
-            se3_cmd_execute();
-			se3c0.comm.req_ready = false;
-			se3c0.comm.resp_ready = true;
-		}
+//		if (se3c0.comm.req_ready) {
+//			se3c0.comm.resp_ready = false;
+//            se3_cmd_execute();
+//			se3c0.comm.req_ready = false;
+//			se3c0.comm.resp_ready = true;
+//		}
 	}
 }
 
