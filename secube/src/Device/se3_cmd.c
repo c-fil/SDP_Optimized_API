@@ -26,7 +26,7 @@ static uint16_t se3_exec(se3_cmd_func handler)
 	uint16_t crc;
 	uint16_t u16tmp;
 #endif
-
+//
     data_len = se3_req_len_data(se3c0.req_hdr.len);
 
 #if SE3_CONF_CRC
