@@ -11,6 +11,8 @@
 #include "se3c1.h"
 #include "crc16.h"
 
+
+
 static uint16_t invalid_cmd_handler(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     return SE3_ERR_CMD;
