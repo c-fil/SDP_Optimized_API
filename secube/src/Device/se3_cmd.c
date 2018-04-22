@@ -22,6 +22,7 @@ static uint16_t se3_exec(se3_cmd_func handler)
     uint16_t status = SE3_OK;
     uint16_t nblocks = 0;
     uint16_t data_len;
+
 #if SE3_CONF_CRC
 	uint16_t crc;
 	uint16_t u16tmp;
