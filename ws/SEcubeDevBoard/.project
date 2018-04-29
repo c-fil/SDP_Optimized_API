@@ -651,16 +651,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_proto.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3c0.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3c0.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/Device/se3c0.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3c0.h</locationURI>
-		</link>
-		<link>
 			<name>Application/src/Device/se3c1.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3c1.c</locationURI>
