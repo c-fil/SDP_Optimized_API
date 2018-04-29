@@ -640,25 +640,5 @@
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_memory.h</locationURI>
 		</link>
-		<link>
-			<name>Application/src/Device/se3_proto.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_proto.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/Device/se3_proto.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_proto.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/Device/se3c1.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3c1.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/Device/se3c1.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3c1.h</locationURI>
-		</link>
 	</linkedResources>
 </projectDescription>

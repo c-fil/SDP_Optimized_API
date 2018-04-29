@@ -46,7 +46,7 @@
 #include "fmc.h"
 
 /* USER CODE BEGIN Includes */
-#include "se3c0.h"
+#include "se3_core.h"
 #include "se3c1.h"
 #include "se3_flash.h"
 #include "se3_proto.h"
@@ -121,7 +121,7 @@ int main(void)
 
 void device_init()
 {
-	se3c0_init();
+	core_init();
 	se3_flash_init();
     se3c1_init();
 }

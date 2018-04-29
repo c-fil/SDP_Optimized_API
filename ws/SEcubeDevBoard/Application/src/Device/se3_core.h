@@ -1,9 +1,3 @@
-/**
- *  \file se3c0.h
- *  \author Nicola Ferri
- *  \brief L0 structures and functions
- */
-
 #pragma once
 #include <stdint.h>
 #include <stdbool.h>
@@ -12,11 +6,15 @@
 #include "aes256.h"
 
 #include "se3c0def.h"
+#include "se3c1def.h"
 #include "se3_common.h"
 ///////
 #include "se3_comm_core.h"
 #include "se3_core_time.h"
+#include "se3_memory.h"
+#include "se3_keys.h"
 ///////
+
 #if defined(_MSC_VER)
 #define SE3_ALIGN_16 __declspec(align(0x10))
 #elif defined(__GNUC__)
@@ -25,17 +23,21 @@
 #define SE3_ALIGN_16
 #endif
 
-void se3c0_init();
-uint64_t se3c0_time_get();
-void se3c0_time_set(uint64_t t);
-void se3c0_time_inc();
-
-const uint8_t se3_hello[SE3_HELLO_SIZE];
-
 //Create bit vector of n MSB 0 followed by 32-n ones;
 #define SE3_BMAP_MAKE(n) ((uint32_t)(0xFFFFFFFF >> (32 - (n))))
 
 
+
+void core_init();
+void login_cleanup();
+bool record_set(uint16_t type, const uint8_t* data);
+bool record_get(uint16_t type, uint8_t* data);
+bool record_find(uint16_t record_type, se3_flash_it* it);
+
+
+////
+//L0
+////
 /** \brief serial number data and state */
 typedef struct SE3_SERIAL_ {
     uint8_t data[SE3_SERIAL_SIZE];
@@ -79,5 +81,48 @@ typedef uint16_t(*se3_cmd_func)(uint16_t, const uint8_t*, uint16_t*, uint8_t*);
     } ctx;
 
 } SE3_L0_GLOBALS;*/
+
+
+
+////
+//L1
+////
+
+/** \brief login status data */
+typedef struct SE3_LOGIN_STATUS_ {
+    bool y; 						 	///< logged in
+    uint16_t access; 				 	///< access level
+    uint16_t challenge_access;  	 	///< access level of the last offered challenge
+    union {
+        uint8_t token[SE3_L1_TOKEN_SIZE];   		///< login token
+        uint8_t challenge[SE3_L1_CHALLENGE_SIZE];  	///< login challenge response expected
+    };
+    uint8_t key[SE3_L1_KEY_SIZE];  		///< session key for protocol encryption
+    se3_payload_cryptoctx cryptoctx;  	///< context for protocol encryption
+    bool cryptoctx_initialized;  		///< context initialized flag
+} SE3_LOGIN_STATUS;
+
+typedef struct SE3_RECORD_INFO_ {
+    uint16_t read_access;  ///< required access level for read
+    uint16_t write_access;  ///< required access level for write
+} SE3_RECORD_INFO;
+
+// ---- records ----
+enum {
+	SE3_FLASH_TYPE_RECORD = 0xF0  ///< flash node type: record
+};
+
+/** \brief Record information */
+enum {
+	SE3_RECORD_SIZE_TYPE = 2,  ///< record.type field size
+	SE3_RECORD_OFFSET_TYPE = 0, ///< record.type field offset
+	SE3_RECORD_OFFSET_DATA = 2, ///< record.data field offset
+};
+
+// ---- crypto ----
+enum {
+	SE3_SESSIONS_BUF = (32*1024),  ///< session buffer size
+	SE3_SESSIONS_MAX = 100  ///< maximum number of sessions
+};
 
 

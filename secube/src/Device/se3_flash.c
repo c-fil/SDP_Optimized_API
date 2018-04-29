@@ -1,68 +1,55 @@
-/**
- *  \file se3_flash.c
- *  \author Nicola Ferri
- *  \brief Flash management
- */
 
 #include "se3_flash.h"
 
-static bool flash_fill(uint32_t addr, uint8_t val, size_t size)
+
+bool flash_fill(uint32_t addr, uint8_t val, size_t size)
 {
-	bool success = true;
 	HAL_FLASH_Unlock();
 	while (size) {
 		if (HAL_OK != HAL_FLASH_Program(FLASH_TYPEPROGRAM_BYTE, addr, (uint64_t)val)) {
-			success = false;
-            se3c0.hwerror = true;
-			break;
+			HAL_FLASH_Lock();
+			return false;
 		}
 		size--;
 		addr++;
 	}
 	HAL_FLASH_Lock();
-	return success;
+	return true;
 }
 
-static bool flash_zero(uint32_t addr, size_t size)
+bool flash_zero(uint32_t addr, size_t size)
 {
-	bool success = true;
 	HAL_FLASH_Unlock();
 	while (size) {
 		if (HAL_OK != HAL_FLASH_Program(FLASH_TYPEPROGRAM_BYTE, addr, 0)) {
-			success = false;
-            se3c0.hwerror = true;
-			break;
+			HAL_FLASH_Lock();
+			return false;
 		}
 		size--;
 		addr++;
 	}
 	HAL_FLASH_Lock();
-	return success;
+	return true;
 }
 
-static bool flash_program(uint32_t addr, const uint8_t* data, size_t size)
+bool flash_program(uint32_t addr, const uint8_t* data, size_t size)
 {
-	bool success = true;
 	HAL_FLASH_Unlock();
 	while (size) {
 		if (HAL_OK != HAL_FLASH_Program(FLASH_TYPEPROGRAM_BYTE, addr, (uint64_t)*data)) {
-			success = false;
-			break;
+			HAL_FLASH_Lock();
+			return false;
 		}
 		size--;
 		addr++;
 		data++;
 	}
 	HAL_FLASH_Lock();
-    if (!success) {
-        se3c0.hwerror = true;
-    }
-	return success;
+	return true;
 }
 
 
-static bool flash_erase(uint32_t sector) {
-    bool success = true;
+bool flash_erase(uint32_t sector) {
 #ifdef CUBESIM
     memset((sector == SE3_FLASH_S0) ? (uint8_t*)(SE3_FLASH_S0_ADDR) : (uint8_t*)(SE3_FLASH_S1_ADDR), 0xFF, SE3_FLASH_SECTOR_SIZE);
 #else
@@ -78,15 +65,15 @@ static bool flash_erase(uint32_t sector) {
 	EraseInitStruct.NbSectors = 1;
 	result = HAL_FLASHEx_Erase(&EraseInitStruct, (uint32_t*)&SectorError);
 	if (result != HAL_OK){
-        success = false;
-        se3c0.hwerror = true;
+		HAL_FLASH_Lock();
+		return false;
     }
 	HAL_FLASH_Lock();
 #endif
-    return success;
+    return true;
 }
 
-static bool flash_swap()
+bool flash_swap()
 {
 	uint32_t other;
 	uint32_t other_base;
@@ -97,11 +84,11 @@ static bool flash_swap()
 	size_t n;
 	bool success, b;
 	se3_flash_it it;
-	if (se3c0.flash.sector == SE3_FLASH_S0) {
+	if (flash.sector == SE3_FLASH_S0) {
 		other = SE3_FLASH_S1;
 		other_base = SE3_FLASH_S1_ADDR;
 	}
-	else if (se3c0.flash.sector == SE3_FLASH_S1) {
+	else if (flash.sector == SE3_FLASH_S1) {
 		other = SE3_FLASH_S0;
 		other_base = SE3_FLASH_S0_ADDR;
 	}
@@ -112,9 +99,9 @@ static bool flash_swap()
 	//erase other sector
 	flash_erase(other);
 	//zero non-programmed slots in index table (first_free_pos to end)
-	if (se3c0.flash.first_free_pos < SE3_FLASH_INDEX_SIZE) {
-		n = SE3_FLASH_INDEX_SIZE - se3c0.flash.first_free_pos;
-		flash_zero((uint32_t)se3c0.flash.index + se3c0.flash.first_free_pos, n);
+	if (flash.first_free_pos < SE3_FLASH_INDEX_SIZE) {
+		n = SE3_FLASH_INDEX_SIZE - flash.first_free_pos;
+		flash_zero((uint32_t)flash.index + flash.first_free_pos, n);
 	}
 
 	//copy good blocks to other sector
@@ -127,7 +114,7 @@ static bool flash_swap()
 			//copy data
 			b = flash_program(
 				other_base + other_used, 
-				se3c0.flash.data + it.pos*SE3_FLASH_BLOCK_SIZE, 
+				flash.data + it.pos*SE3_FLASH_BLOCK_SIZE,
 				it.blocks*SE3_FLASH_BLOCK_SIZE
 			);
 			if (!b) {
@@ -160,17 +147,17 @@ static bool flash_swap()
 	}
 
 	//clear magic from this sector
-	if (!flash_zero((uint32_t)se3c0.flash.base, 1)) {
+	if (!flash_zero((uint32_t)flash.base, 1)) {
 		return false;
 	}
 
 	//swap sectors
-	se3c0.flash.base = (uint8_t*)other_base;
-    se3c0.flash.sector = other;
-    se3c0.flash.index = se3c0.flash.base + SE3_FLASH_MAGIC_SIZE;
-    se3c0.flash.data = se3c0.flash.index + SE3_FLASH_INDEX_SIZE;
-    se3c0.flash.allocated = se3c0.flash.used = other_used;
-    se3c0.flash.first_free_pos = other_pos;
+	flash.base = (uint8_t*)other_base;
+    flash.sector = other;
+    flash.index = flash.base + SE3_FLASH_MAGIC_SIZE;
+    flash.data = flash.index + SE3_FLASH_INDEX_SIZE;
+    flash.allocated = flash.used = other_used;
+    flash.first_free_pos = other_pos;
 
 	return true;
 }
@@ -178,18 +165,18 @@ static bool flash_swap()
 
 void se3_flash_info_setup(uint32_t sector, const uint8_t* base)
 {
-	se3c0.flash.base = base;
-    se3c0.flash.sector = sector;
-    se3c0.flash.index = se3c0.flash.base + SE3_FLASH_MAGIC_SIZE;
-    se3c0.flash.data = se3c0.flash.index + SE3_FLASH_INDEX_SIZE;
-    se3c0.flash.allocated = se3c0.flash.used = SE3_FLASH_MAGIC_SIZE + SE3_FLASH_INDEX_SIZE;
-    se3c0.flash.first_free_pos = 0;
+	flash.base = base;
+    flash.sector = sector;
+    flash.index = flash.base + SE3_FLASH_MAGIC_SIZE;
+    flash.data = flash.index + SE3_FLASH_INDEX_SIZE;
+    flash.allocated = flash.used = SE3_FLASH_MAGIC_SIZE + SE3_FLASH_INDEX_SIZE;
+    flash.first_free_pos = 0;
 }
 
 bool se3_flash_canfit(size_t size)
 {
 	size_t size_on_flash = size + 2;
-	return (size_on_flash <= (SE3_FLASH_SECTOR_SIZE - se3c0.flash.used));
+	return (size_on_flash <= (SE3_FLASH_SECTOR_SIZE - flash.used));
 }
 
 bool se3_flash_init()
@@ -236,19 +223,19 @@ bool se3_flash_init()
 	//scan flash
 	se3_flash_it_init(&it);
 	while (se3_flash_it_next(&it)) {
-		se3c0.flash.allocated += it.blocks*SE3_FLASH_BLOCK_SIZE;
+		flash.allocated += it.blocks*SE3_FLASH_BLOCK_SIZE;
 		if (it.type != 0) {
-			se3c0.flash.used += it.blocks*SE3_FLASH_BLOCK_SIZE;
+			flash.used += it.blocks*SE3_FLASH_BLOCK_SIZE;
             if (it.type == SE3_FLASH_TYPE_SERIAL) {
-                memcpy(se3c0.serial.data, it.addr, SE3_SERIAL_SIZE);
-                se3c0.serial.written = true;
+                memcpy(serial.data, it.addr, SE3_SERIAL_SIZE);
+                serial.written = true;
             }
 		}
 	}
 	if (it.pos > SE3_FLASH_INDEX_SIZE) {
 		it.pos = SE3_FLASH_INDEX_SIZE;
 	}
-	se3c0.flash.first_free_pos = it.pos;
+	flash.first_free_pos = it.pos;
 
 	return true;
 }
@@ -272,23 +259,23 @@ bool se3_flash_it_next(se3_flash_it* it)
 	size_t pos2;
 	if (it->addr == NULL) {
 		it->pos = 0;
-		it->addr = se3c0.flash.data + 2;
+		it->addr = flash.data + 2;
 	}
 	else {
 		(it->pos)+=it->blocks;
 	}
 	while (it->pos < SE3_FLASH_INDEX_SIZE) {
-		type = *(se3c0.flash.index + it->pos);
+		type = *(flash.index + it->pos);
 		if (type == 0xFF) return false;
 		if (type != 0xFE) {
-			node = se3c0.flash.data + (it->pos) * SE3_FLASH_BLOCK_SIZE;
+			node = flash.data + (it->pos) * SE3_FLASH_BLOCK_SIZE;
 			it->addr = node + 2;
             SE3_GET16(node, 0, it->size);
 			it->type = type;
 
 			//count 'CONT' nodes after
 			pos2 = it->pos + 1;
-			while (pos2 < SE3_FLASH_INDEX_SIZE && *(se3c0.flash.index + pos2) == 0xFE)pos2++;
+			while (pos2 < SE3_FLASH_INDEX_SIZE && *(flash.index + pos2) == 0xFE)pos2++;
 			it->blocks = (uint16_t)(pos2 - it->pos);
 			return true;
 		}
@@ -300,17 +287,17 @@ bool se3_flash_it_next(se3_flash_it* it)
 
 size_t se3_flash_unused()
 {
-	return SE3_FLASH_SECTOR_SIZE - se3c0.flash.used;
+	return SE3_FLASH_SECTOR_SIZE - flash.used;
 }
 
 bool se3_flash_it_new(se3_flash_it* it, uint8_t type, uint16_t size)
 {
 	size_t pos, nblocks;
 	const uint8_t* node;
-	size_t avail = SE3_FLASH_SECTOR_SIZE - se3c0.flash.allocated;
+	size_t avail = SE3_FLASH_SECTOR_SIZE - flash.allocated;
 	uint16_t size_on_flash = size + 2;
 	if (size_on_flash > SE3_FLASH_NODE_MAX)return false;
-	if (size_on_flash > (SE3_FLASH_SECTOR_SIZE - se3c0.flash.used)) {
+	if (size_on_flash > (SE3_FLASH_SECTOR_SIZE - flash.used)) {
 		return false;
 	}
 	if (size_on_flash > avail) {
@@ -319,23 +306,23 @@ bool se3_flash_it_new(se3_flash_it* it, uint8_t type, uint16_t size)
 			return false;
 		}
 	}
-	if (se3c0.flash.first_free_pos >= SE3_FLASH_INDEX_SIZE) {
+	if (flash.first_free_pos >= SE3_FLASH_INDEX_SIZE) {
 		return false;
 	}
-	pos = se3c0.flash.first_free_pos;
-	node = se3c0.flash.data + pos*SE3_FLASH_BLOCK_SIZE;
+	pos = flash.first_free_pos;
+	node = flash.data + pos*SE3_FLASH_BLOCK_SIZE;
 
 	nblocks = size_on_flash / SE3_FLASH_BLOCK_SIZE;
 	if (size_on_flash % SE3_FLASH_BLOCK_SIZE)nblocks++;
-	if (!flash_program((uint32_t)se3c0.flash.index + pos, &type, 1)) {
+	if (!flash_program((uint32_t)flash.index + pos, &type, 1)) {
 		return false;
 	}
-	se3c0.flash.first_free_pos += 1;
+	flash.first_free_pos += 1;
 	if (nblocks > 1) {
-		if (!flash_fill((uint32_t)se3c0.flash.index + pos + 1, 0xFE, nblocks - 1)) {
+		if (!flash_fill((uint32_t)flash.index + pos + 1, 0xFE, nblocks - 1)) {
 			return false;
 		}
-		se3c0.flash.first_free_pos += nblocks - 1;
+		flash.first_free_pos += nblocks - 1;
 	}
 	
 	if (!flash_program((uint32_t)node, (uint8_t*)&size, 2)) {
@@ -347,8 +334,8 @@ bool se3_flash_it_new(se3_flash_it* it, uint8_t type, uint16_t size)
 	it->type = type;
 	it->blocks = (uint16_t)nblocks;
 
-	se3c0.flash.used += nblocks*SE3_FLASH_BLOCK_SIZE;
-	se3c0.flash.allocated += nblocks*SE3_FLASH_BLOCK_SIZE;
+	flash.used += nblocks*SE3_FLASH_BLOCK_SIZE;
+	flash.allocated += nblocks*SE3_FLASH_BLOCK_SIZE;
 
 	return true;
 }
@@ -359,13 +346,13 @@ bool se3_flash_pos_delete(size_t pos)
 	size_t pos2, blocks;
 	if (pos >= SE3_FLASH_INDEX_SIZE)return false;
 	pos2 = pos + 1;
-	while (pos2 < SE3_FLASH_INDEX_SIZE && *(se3c0.flash.index + pos2) == 0xFE)pos2++;
+	while (pos2 < SE3_FLASH_INDEX_SIZE && *(flash.index + pos2) == 0xFE)pos2++;
 	blocks = (pos2 - pos);
 	if (pos + blocks > SE3_FLASH_INDEX_SIZE)return false;
-	if (!flash_zero((uint32_t)se3c0.flash.index + pos, blocks)) {
+	if (!flash_zero((uint32_t)flash.index + pos, blocks)) {
 		return false;
 	}
-	se3c0.flash.used -= blocks*SE3_FLASH_BLOCK_SIZE;
+	flash.used -= blocks*SE3_FLASH_BLOCK_SIZE;
 	return true;
 }
 
@@ -374,10 +361,10 @@ bool se3_flash_it_delete(se3_flash_it* it)
 	if (it->pos + it->blocks > SE3_FLASH_INDEX_SIZE) {
 		return false;
 	}
-	if (!flash_zero((uint32_t)se3c0.flash.index + it->pos, it->blocks)) {
+	if (!flash_zero((uint32_t)flash.index + it->pos, it->blocks)) {
 		return false;
 	}
-	se3c0.flash.used -= it->blocks*SE3_FLASH_BLOCK_SIZE;
+	flash.used -= it->blocks*SE3_FLASH_BLOCK_SIZE;
 	return true;
 }
 

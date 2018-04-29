@@ -45,10 +45,8 @@ static uint16_t se3_exec(se3_cmd_func handler)
 		status = handler(data_len, se3c0.comm.req_data, &resp_size, se3c0.comm.resp_data);
 	}
 
-    if (se3c0.hwerror) {
-        status = SE3_ERR_HW;
+    if (status == SE3_ERR_HW) {
         resp_size = 0;
-        se3c0.hwerror = false;
     }
     else if (resp_size > SE3_RESP_MAX_DATA) {
         status = SE3_ERR_HW;

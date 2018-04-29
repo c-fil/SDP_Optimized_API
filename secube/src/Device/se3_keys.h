@@ -6,7 +6,7 @@
 
 #pragma once
 #include "se3c1def.h"
-#include "se3_flash.h"
+//#include "se3_flash.h"
 
 /** \brief Flash key structure
  *  
@@ -52,7 +52,6 @@ bool se3_key_find(uint32_t id, se3_flash_it* it);
 /** \brief Remove a key
  *  
  *  Delete a key from the flash
- *  \remark if a flash operation fails, the hwerror flag (se3c0.hwerror) is set.
  *  \param it a flash iterator pointing to the key
  *  \return true on success
  */
@@ -62,7 +61,6 @@ bool se3_key_remove(se3_flash_it* it);
  *  
  *  Create a new node with the necessary amount of space for the key,
  *  then write the key.
- *  \remark if a flash operation fails, the hwerror flag (se3c0.hwerror) is set.
  *  \param it a flash iterator which will receive the position of the new node
  *  \param key a flash key structure containing the key information
  *      The data and name fields must point to a valid memory region,
@@ -101,7 +99,6 @@ void se3_key_read_data(se3_flash_it* it, uint16_t data_size, uint8_t* data);
 /** \brief Write key data
  *  
  *  Write key data to a flash node
- *  \remark if a flash operation fails, the hwerror flag (se3c0.hwerror) is set.
  *  \param it a flash iterator pointing to a newly created flash node of key type
  *  \param key a flash key structure containing the key information
  *      The data and name fields must point to a valid memory region,
