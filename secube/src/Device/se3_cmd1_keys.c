@@ -11,7 +11,7 @@
  *  
  *  key_edit : (op:ui16, id:ui32, validity:ui32, data-len:ui16, name-len:ui16, data[data-len], name[name-len]) => ()
  */
-uint16_t L1d_key_edit(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t key_edit(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     struct {
         uint16_t op;
@@ -114,7 +114,7 @@ uint16_t L1d_key_edit(uint16_t req_size, const uint8_t* req, uint16_t* resp_size
  *  key_list : (skip:ui16, nmax:ui16, salt[32]) => (count:ui16, keyinfo0, keyinfo1, ...)
  *      keyinfo: (id:ui32, validity:ui32, data-len:ui16, name-len:ui16, name[name-len], fingerprint[32])
  */
-uint16_t L1d_key_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t key_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     struct {
         uint16_t skip;

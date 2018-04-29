@@ -1,19 +1,15 @@
-/*
- * se3_disp_core.h
- *
- *  Created on: 29 apr 2018
- *      Author: Pietro
- */
-
-#include "se3_cmd1.h"
-
+#pragma once
 #include "sha256.h"
 #include "aes256.h"
+#include "pbkdf2.h"
+#include <string.h>
+
 #include "se3_algo_Aes.h"
 #include "se3_algo_sha256.h"
 #include "se3_algo_HmacSha256.h"
 #include "se3_algo_AesHmacSha256s.h"
 #include "se3_algo_aes256hmacsha256.h"
+//#include "se3_common.h"
 
 
 /** \brief algorithm descriptor type */
@@ -26,6 +22,11 @@ typedef struct se3_algo_descriptor_ {
 	uint16_t display_block_size;  ///< block size for the algorithm list API
 	uint16_t display_key_size;  ///< key size for the algorithm list API
 } se3_algo_descriptor;
+
+/** Security algo */
+enum {
+	PBKDF2HmacSha256_t = 0
+};
 
 
 /** algorithm description table */
@@ -42,3 +43,10 @@ typedef uint16_t(*se3_crypto_update_handler)(
 	uint16_t datain1_len, const uint8_t* datain1,
 	uint16_t datain2_len, const uint8_t* datain2,
 	uint16_t* dataout_len, uint8_t* dataout);
+
+void dispatcher_handler(
+		int32_t algo,
+		const uint8_t *pw, size_t npw,
+		const uint8_t *salt, size_t nsalt,
+		uint32_t iterations,
+		uint8_t *out, size_t nout);

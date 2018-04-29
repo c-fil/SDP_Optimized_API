@@ -1,12 +1,7 @@
-/**
- *  \file se3_keys.h
- *  \author Nicola Ferri
- *  \brief Key management
- */
-
 #pragma once
-#include "se3c1def.h"
-//#include "se3_flash.h"
+#include "se3_flash.h"
+
+#define SE3_TYPE_KEY 100
 
 /** \brief Flash key structure
  *  
@@ -116,6 +111,5 @@ bool se3_key_write(se3_flash_it* it, se3_flash_key* key);
 void se3_key_fingerprint(se3_flash_key* key, const uint8_t* salt, uint8_t* fingerprint);
 
 
-#define SE3_TYPE_KEY 100
 
 

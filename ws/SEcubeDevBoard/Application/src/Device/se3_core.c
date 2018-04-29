@@ -6,8 +6,8 @@
 SE3_FLASH_INFO flash;
 SE3_COMM_STATUS comm;
 SE3_SERIAL serial;
-se3c0_req_header req_hdr;
-se3c0_resp_header resp_hdr;
+req_header req_hdr;
+resp_header resp_hdr;
 uint16_t hwerror;
 
 ////

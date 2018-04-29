@@ -11,7 +11,7 @@
  *  
  *  L1_crypto_init : (algo:ui16, mode:ui16, key_id:ui32) => (sid:ui32)
  */
-uint16_t L1d_crypto_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t crypto_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     struct {
         uint16_t algo;
@@ -123,7 +123,7 @@ uint16_t L1d_crypto_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_s
  *      datain1[datain1-len], pad-to-16[...], datain2[datain2-len])
  *  => (dataout-len, pad-to-16[14], dataout[dataout-len])
  */
-uint16_t L1d_crypto_update(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t crypto_update(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     struct {
         uint32_t sid;
@@ -223,7 +223,7 @@ uint16_t L1d_crypto_update(uint16_t req_size, const uint8_t* req, uint16_t* resp
  *  
  *  crypto_set_time : (devtime:ui32) => ()
  */
-uint16_t L1d_crypto_set_time(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t crypto_set_time(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     struct {
         uint32_t devtime;
@@ -250,7 +250,7 @@ uint16_t L1d_crypto_set_time(uint16_t req_size, const uint8_t* req, uint16_t* re
  *  crypto_list : () => (count:ui16, algoinfo0, algoinfo1, ...)
  *      algoinfo : (name[16], type:u16, block_size:u16, key_size:u16)
  */
-uint16_t L1d_crypto_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t crypto_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     struct {
         uint16_t count;

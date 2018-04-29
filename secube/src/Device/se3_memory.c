@@ -1,8 +1,3 @@
-/**
- *  \file se3_memory.c
- *  \author Nicola Ferri
- *  \brief Memory management (session allocator)
- */
 
 #include "se3_memory.h"
 
@@ -46,7 +41,7 @@ void se3_mem_init(se3_mem* mem, size_t index_size, uint8_t** index, size_t buf_s
     se3_mem_reset(mem);
 }
 
-static void se3_mem_compact(uint8_t* p, uint8_t* end)
+void se3_mem_compact(uint8_t* p, uint8_t* end)
 {
 	uint8_t* p2 = p;
 	bool empty = false;
@@ -68,7 +63,7 @@ static void se3_mem_compact(uint8_t* p, uint8_t* end)
 	}
 }
 
-static uint8_t* se3_mem_defrag(se3_mem* mem)
+uint8_t* se3_mem_defrag(se3_mem* mem)
 {
 	uint8_t* p1, *p2;
 	uint16_t p2_size;

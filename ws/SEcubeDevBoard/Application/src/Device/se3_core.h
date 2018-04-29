@@ -10,6 +10,7 @@
 #include "se3_common.h"
 ///////
 #include "se3_comm_core.h"
+#include "se3_disp_core.h"
 #include "se3_core_time.h"
 #include "se3_memory.h"
 #include "se3_keys.h"
@@ -53,7 +54,7 @@ typedef struct se3c0_req_header_ {
     uint16_t crc;
 #endif
     uint32_t cmdtok[SE3_COMM_N - 1];
-} se3c0_req_header;
+} req_header;
 
 /** \brief response header to be encoded */
 typedef struct se3c0_resp_header_ {
@@ -64,7 +65,7 @@ typedef struct se3c0_resp_header_ {
     uint16_t crc;
 #endif
     uint32_t cmdtok[SE3_COMM_N - 1];
-} se3c0_resp_header;
+} resp_header;
 
 
 /** L0 command handler */

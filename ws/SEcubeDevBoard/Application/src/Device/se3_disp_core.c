@@ -1,10 +1,3 @@
-/*
- * se3_disp_core.c
- *
- *  Created on: 29 apr 2018
- *      Author: Pietro
- */
-
 #include "se3_disp_core.h"
 
 /* Cryptographic algorithms handlers and display info */
@@ -53,3 +46,20 @@ se3_algo_descriptor L1d_algo_table[SE3_ALGO_MAX] = {
 	{ NULL, NULL, 0, "", 0, 0, 0 },
 	{ NULL, NULL, 0, "", 0, 0, 0 }
 };
+
+void dispatcher_handler (
+		int32_t algo,
+		const uint8_t *pw,
+		size_t npw,
+		const uint8_t *salt,
+		size_t nsalt,
+		uint32_t iterations,
+		uint8_t *out, size_t nout){
+    switch(algo) {
+		case PBKDF2HmacSha256_t:
+			PBKDF2HmacSha256( pw, npw, salt, nsalt, iterations, out, nout);
+			break;
+		}
+    	default:
+    		break;
+}

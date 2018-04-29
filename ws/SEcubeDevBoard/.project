@@ -541,36 +541,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_sha256.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/Device/se3_cmd.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/Device/se3_cmd0.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd0.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/Device/se3_cmd0.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd0.h</locationURI>
-		</link>
-		<link>
-			<name>Application/src/Device/se3_cmd1.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/Device/se3_cmd1.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1.h</locationURI>
-		</link>
-		<link>
 			<name>Application/src/Device/se3_cmd1_config.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1_config.c</locationURI>
