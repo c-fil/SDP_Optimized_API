@@ -153,7 +153,7 @@ uint16_t se3_exec(se3_cmd_func handler)
     return nblocks;
 }
 
-uint16_t sec_cmd (uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t sec_cmd 					(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     se3_cmd_func handler = NULL;
     uint16_t resp1_size, req1_size;
@@ -261,12 +261,12 @@ uint16_t sec_cmd (uint16_t req_size, const uint8_t* req, uint16_t* resp_size, ui
     return SE3_OK;
 }
 
-uint16_t invalid_cmd_handler(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t invalid_cmd_handler		(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     return SE3_ERR_CMD;
 }
 
-uint16_t echo(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t echo						(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     memcpy(resp, req, req_size);
     *resp_size = req_size;
@@ -375,5 +375,304 @@ uint16_t challenge(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, u
 	login.challenge_access = req_params.access;
 
     *resp_size = SE3_CMD1_CHALLENGE_RESP_SIZE;
+	return SE3_OK;
+}
+
+uint16_t cmd_login(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+{
+    struct {
+        const uint8_t* cresp;
+    } req_params;
+    struct {
+        uint8_t* token;
+    } resp_params;
+    uint16_t access;
+
+    if (req_size != SE3_CMD1_LOGIN_REQ_SIZE) {
+        SE3_TRACE(("[L1d_login] req size mismatch\n"));
+        return SE3_ERR_PARAMS;
+    }
+
+	if (login.y) {
+		SE3_TRACE(("[L1d_login] already logged in"));
+		return SE3_ERR_STATE;
+	}
+	if (SE3_ACCESS_MAX == login.challenge_access) {
+		SE3_TRACE(("[L1d_login] not waiting for challenge response"));
+		return SE3_ERR_STATE;
+	}
+
+    req_params.cresp = req + SE3_CMD1_LOGIN_REQ_OFF_CRESP;
+    resp_params.token = resp + SE3_CMD1_LOGIN_RESP_OFF_TOKEN;
+
+	access = login.challenge_access;
+	login.challenge_access = SE3_ACCESS_MAX;
+	if (memcmp(req_params.cresp, (uint8_t*)login.challenge, 32)) {
+		SE3_TRACE(("[L1d_login] challenge response mismatch"));
+		return SE3_ERR_PIN;
+	}
+
+	if (SE3_L1_TOKEN_SIZE != se3_rand(SE3_L1_TOKEN_SIZE, (uint8_t*)login.token)) {
+		SE3_TRACE(("[L1d_login] random failed"));
+		return SE3_ERR_HW;
+	}
+	memcpy(resp_params.token, (uint8_t*)login.token, 16);
+	login.y = 1;
+	login.access = access;
+
+    *resp_size = SE3_CMD1_LOGIN_RESP_SIZE;
+	return SE3_OK;
+}
+
+uint16_t logout(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+{
+    if (req_size != 0) {
+        SE3_TRACE(("[L1d_logout] req size mismatch\n"));
+        return SE3_ERR_PARAMS;
+    }
+	if (!login.y) {
+		SE3_TRACE(("[L1d_logout] not logged in\n"));
+		return SE3_ERR_ACCESS;
+	}
+	login_cleanup();
+	return SE3_OK;
+}
+
+uint16_t key_edit(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+{
+    struct {
+        uint16_t op;
+        uint32_t id;
+        uint32_t validity;
+        uint16_t data_len;
+        uint16_t name_len;
+        const uint8_t* data;
+        const uint8_t* name;
+    } req_params;
+
+    se3_flash_key key;
+	bool equal;
+    se3_flash_it it = { .addr = NULL };
+
+    if (req_size < SE3_CMD1_KEY_EDIT_REQ_OFF_DATA_AND_NAME) {
+        SE3_TRACE(("[L1d_key_edit] req size mismatch\n"));
+        return SE3_ERR_PARAMS;
+    }
+
+    if (!login.y) {
+        SE3_TRACE(("[L1d_key_edit] not logged in\n"));
+        return SE3_ERR_ACCESS;
+    }
+
+    SE3_GET16(req, SE3_CMD1_KEY_EDIT_REQ_OFF_OP, req_params.op);
+    SE3_GET32(req, SE3_CMD1_KEY_EDIT_REQ_OFF_ID, req_params.id);
+    SE3_GET32(req, SE3_CMD1_KEY_EDIT_REQ_OFF_VALIDITY, req_params.validity);
+    SE3_GET16(req, SE3_CMD1_KEY_EDIT_REQ_OFF_DATA_LEN, req_params.data_len);
+    SE3_GET16(req, SE3_CMD1_KEY_EDIT_REQ_OFF_NAME_LEN, req_params.name_len);
+    req_params.data = req + SE3_CMD1_KEY_EDIT_REQ_OFF_DATA_AND_NAME;
+    req_params.name = req + SE3_CMD1_KEY_EDIT_REQ_OFF_DATA_AND_NAME + req_params.data_len;
+
+    // check params
+    if ((req_params.data_len > SE3_KEY_DATA_MAX) || (req_params.name_len > SE3_KEY_NAME_MAX)) {
+        return SE3_ERR_PARAMS;
+    }
+
+    key.id = req_params.id;
+    key.data_size = req_params.data_len;
+    key.name_size = req_params.name_len;
+    key.validity = req_params.validity;
+    key.data = (uint8_t*)req_params.data;
+    key.name = (uint8_t*)req_params.name;
+
+    se3_flash_it_init(&it);
+    if (!se3_key_find(key.id, &it)) {
+        it.addr = NULL;
+    }
+
+    switch (req_params.op) {
+    case SE3_KEY_OP_INSERT:
+        if (NULL != it.addr) {
+            return SE3_ERR_RESOURCE;
+        }
+        if (!se3_key_new(&it, &key)) {
+            SE3_TRACE(("[L1d_key_edit] se3_key_new failed\n"));
+            return SE3_ERR_MEMORY;
+        }
+        break;
+    case SE3_KEY_OP_DELETE:
+        if (NULL == it.addr) {
+            return SE3_ERR_RESOURCE;
+        }
+        if (!se3_flash_it_delete(&it)) {
+            return SE3_ERR_HW;
+        }
+        break;
+    case SE3_KEY_OP_UPSERT:
+		equal = false;
+        if (NULL != it.addr) {
+            // do not replace if equal
+			equal = se3_key_equal(&it, &key);
+			if (!equal) {
+				if (!se3_flash_it_delete(&it)) {
+					return SE3_ERR_HW;
+				}
+			}
+        }
+        it.addr = NULL;
+		if (!equal) {
+			if (!se3_key_new(&it, &key)) {
+				SE3_TRACE(("[L1d_key_edit] se3_key_new failed\n"));
+				return SE3_ERR_MEMORY;
+			}
+		}
+        break;
+    default:
+        SE3_TRACE(("[L1d_key_edit] invalid op\n"));
+        return SE3_ERR_PARAMS;
+    }
+
+	return SE3_OK;
+}
+
+uint16_t key_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+{
+    struct {
+        uint16_t skip;
+        uint16_t nmax;
+		uint8_t* salt;
+    } req_params;
+    struct {
+        uint16_t count;
+    } resp_params;
+
+    se3_flash_key key;
+    se3_flash_it it = { .addr = NULL };
+    size_t size = 0;
+    size_t key_info_size = 0;
+    uint8_t* p;
+    uint16_t skip;
+    uint8_t tmp[SE3_KEY_NAME_MAX];
+	uint8_t fingerprint[SE3_KEY_FINGERPRINT_SIZE];
+
+    if (req_size != SE3_CMD1_KEY_LIST_REQ_SIZE) {
+        SE3_TRACE(("[L1d_key_list] req size mismatch\n"));
+        return SE3_ERR_PARAMS;
+    }
+
+    if (!login.y) {
+        SE3_TRACE(("[L1d_key_list] not logged in\n"));
+        return SE3_ERR_ACCESS;
+    }
+
+    SE3_GET16(req, SE3_CMD1_KEY_LIST_REQ_OFF_SKIP, req_params.skip);
+    SE3_GET16(req, SE3_CMD1_KEY_LIST_REQ_OFF_NMAX, req_params.nmax);
+	req_params.salt = req + SE3_CMD1_KEY_LIST_REQ_OFF_SALT;
+
+	/* ! will write key data to request buffer */
+	key.data = (uint8_t*)req + ((SE3_CMD1_KEY_LIST_REQ_SIZE / 16) + 1) * 16;
+    key.name = tmp;
+    resp_params.count = 0;
+    skip = req_params.skip;
+    size = SE3_CMD1_KEY_LIST_RESP_OFF_KEYINFO;
+    p = resp + SE3_CMD1_KEY_LIST_RESP_OFF_KEYINFO;
+    while (se3_flash_it_next(&it)) {
+        if (it.type == SE3_TYPE_KEY) {
+            if (skip) {
+                skip--;
+                continue;
+            }
+            se3_key_read(&it, &key);
+            key_info_size = SE3_CMD1_KEY_LIST_KEYINFO_OFF_NAME + key.name_size;
+            if (size + key_info_size > SE3_RESP1_MAX_DATA) {
+                break;
+            }
+			se3_key_fingerprint(&key, req_params.salt, fingerprint);
+            SE3_SET32(p, SE3_CMD1_KEY_LIST_KEYINFO_OFF_ID, key.id);
+            SE3_SET32(p, SE3_CMD1_KEY_LIST_KEYINFO_OFF_VALIDITY, key.validity);
+            SE3_SET16(p, SE3_CMD1_KEY_LIST_KEYINFO_OFF_DATA_LEN, key.data_size);
+            SE3_SET16(p, SE3_CMD1_KEY_LIST_KEYINFO_OFF_NAME_LEN, key.name_size);
+			memcpy(p + SE3_CMD1_KEY_LIST_KEYINFO_OFF_FINGERPRINT, fingerprint, SE3_KEY_FINGERPRINT_SIZE);
+            memcpy(p + SE3_CMD1_KEY_LIST_KEYINFO_OFF_NAME, key.name, key.name_size);
+            p += key_info_size;
+            size += key_info_size;
+            (resp_params.count)++;
+            if (resp_params.count >= req_params.nmax) {
+                break;
+            }
+        }
+    }
+	memset(key.data, 0, SE3_KEY_DATA_MAX);
+
+    SE3_SET16(resp, SE3_CMD1_KEY_LIST_RESP_OFF_COUNT, resp_params.count);
+    *resp_size = (uint16_t)size;
+
+    return SE3_OK;
+}
+
+uint16_t config(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+{
+    struct {
+        uint16_t type;
+        uint16_t op;
+        const uint8_t* value;
+    } req_params;
+    struct {
+        uint8_t* value;
+    } resp_params;
+
+    if (!login.y) {
+        SE3_TRACE(("[L1d_config] not logged in\n"));
+        return SE3_ERR_ACCESS;
+    }
+
+    SE3_GET16(req, SE3_CMD1_CONFIG_REQ_OFF_ID, req_params.type);
+    SE3_GET16(req, SE3_CMD1_CONFIG_REQ_OFF_OP, req_params.op);
+    req_params.value = req + SE3_CMD1_CONFIG_REQ_OFF_VALUE;
+    resp_params.value = resp + SE3_CMD1_CONFIG_RESP_OFF_VALUE;
+
+    // check params
+    if (req_params.type >= SE3_RECORD_MAX) {
+        SE3_TRACE(("[L1d_config] type out of range\n"));
+        return SE3_ERR_PARAMS;
+    }
+    switch (req_params.op) {
+    case SE3_CONFIG_OP_GET:
+    case SE3_CONFIG_OP_SET:
+        if (req_size != SE3_CMD1_CONFIG_REQ_OFF_VALUE + SE3_RECORD_SIZE) {
+            SE3_TRACE(("[L1d_config] req size mismatch\n"));
+            return SE3_ERR_PARAMS;
+        }
+        break;
+    default:
+        SE3_TRACE(("[L1d_config] op invalid\n"));
+        return SE3_ERR_PARAMS;
+    }
+
+    if (req_params.op == SE3_CONFIG_OP_GET) {
+        // check access
+        if (se3c1.login.access < se3c1.records[req_params.type].read_access) {
+            SE3_TRACE(("[L1d_config] insufficient access\n"));
+            return SE3_ERR_ACCESS;
+        }
+        if (!se3c1_record_get(req_params.type, resp_params.value)) {
+            return SE3_ERR_RESOURCE;
+        }
+        *resp_size = SE3_RECORD_SIZE;
+    }
+    else if (req_params.op == SE3_CONFIG_OP_SET) {
+        // check access
+        if (login.access < records[req_params.type].write_access) {
+            SE3_TRACE(("[L1d_config] insufficient access\n"));
+            return SE3_ERR_ACCESS;
+        }
+        if (!se3c1_record_set(req_params.type, req_params.value)) {
+            return SE3_ERR_MEMORY;
+        }
+    }
+    else {
+        SE3_TRACE(("[L1d_config] invalid op\n"));
+        return SE3_ERR_PARAMS;
+    }
+
 	return SE3_OK;
 }

@@ -1,10 +1,6 @@
-/**
-*  \file se3_algo_AesHmacSha256s.c
-*  \author Nicola Ferri
-*  \brief SE3_ALGO_AES_HMACSHA256 crypto handlers
-*/
-
 #include "se3_algo_AesHmacSha256s.h"
+#include "se3_common.h"
+
 
 enum {
 	SE3_ALGO_STATE_KEYS_NOT_INITIALIZED = 0,

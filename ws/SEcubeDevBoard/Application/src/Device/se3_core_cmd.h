@@ -96,11 +96,39 @@ uint16_t challenge(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, u
 /** \brief L1 LOGIN command handler
  *
  *  Respond to challenge and complete the login
+ *  login : (cresp[32]) => (tok[16])
  */
 uint16_t cmd_login(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
 
 /** \brief L1 LOGOUT command handler
  *
  *  Log out and release resources
+ *  logout : () => ()
  */
 uint16_t logout(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+
+/** \brief L1 KEY_EDIT
+ *
+ *  Insert, delete or update a key
+ *  key_edit : (op:ui16, id:ui32, validity:ui32, data-len:ui16, name-len:ui16, data[data-len], name[name-len]) => ()
+ */
+uint16_t key_edit(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 KEY_LIST
+ *
+ *  Get a list of keys in the device
+ *  key_list : (skip:ui16, nmax:ui16, salt[32]) => (count:ui16, keyinfo0, keyinfo1, ...)
+ *  keyinfo: (id:ui32, validity:ui32, data-len:ui16, name-len:ui16, name[name-len], fingerprint[32])
+ */
+uint16_t key_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/////////
+////CONFIG
+/////////
+/** \brief L1 CONFIG command handler
+ *
+ *  Get or set a configuration record
+ *  config : (type:ui16, op:ui16, value[32]) => (value[32])
+ */
+uint16_t config(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);

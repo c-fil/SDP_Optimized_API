@@ -7,6 +7,7 @@
 #pragma once
 
 #include "se3c0def.h"
+#include "se3c1def.h"
 #include "aes256.h"
 #include "sha256.h"
 #include "pbkdf2.h"

@@ -1,5 +1,4 @@
 #pragma once
-#include "se3c1.h"
 #include "pbkdf2.h"
 
 #define PBKDF2_SALT_LEN	32

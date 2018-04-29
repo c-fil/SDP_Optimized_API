@@ -1,10 +1,7 @@
-/**
- *  \file se3_algo_Aes.h
- *  \author Nicola Ferri
- *  \brief SE3_ALGO_AES crypto handlers
- */
 
 #include "se3_algo_Aes.h"
+#include "se3_common.h"
+
 
 uint16_t se3_algo_Aes_init(
     se3_flash_key* key, uint16_t mode, uint8_t* ctx)

@@ -1,11 +1,12 @@
-/**
- *  \file se3_algo_Aes.h
- *  \author Nicola Ferri
- *  \brief SE3_ALGO_AES crypto handlers
- */
-
 #pragma once
-#include "se3c1.h"
+#include "se3_common.h"
+#include "se3_keys.h"
+#include "se3c1def.h"
+
+#include <stdint.h>
+int ciaoM;
+uint16_t maremma;
+
 
 /** \brief SE3_ALGO_AES init handler
  *  
@@ -16,9 +17,7 @@
  *  Supported key sizes
  *  128-bit, 192-bit, 256-bit
  */
-uint16_t se3_algo_Aes_init(
-    se3_flash_key* key, uint16_t mode, uint8_t* ctx);
-
+uint16_t se3_algo_Aes_init(se3_flash_key* key, uint16_t mode, uint8_t* ctx);
 
 /** \brief SE3_ALGO_AES update handler
  *

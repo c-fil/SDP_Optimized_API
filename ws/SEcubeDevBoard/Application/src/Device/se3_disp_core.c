@@ -1,4 +1,5 @@
 #include "se3_disp_core.h"
+#include "se3_common.h"
 
 /* Cryptographic algorithms handlers and display info */
 se3_algo_descriptor L1d_algo_table[SE3_ALGO_MAX] = {
