@@ -1,13 +1,14 @@
 #pragma once
-#include "se3_common.h"
+//#include "se3_keys.h"
+//#include "se3c1def.h"
+
+//#include <stdint.h>
+
 #include "se3_keys.h"
-#include "se3c1def.h"
-
+#include <stdbool.h>
 #include <stdint.h>
-int ciaoM;
-uint16_t maremma;
-
-
+#include <se3c1def.h>
+#include "se3_common.h"
 /** \brief SE3_ALGO_AES init handler
  *  
  *  Supported modes

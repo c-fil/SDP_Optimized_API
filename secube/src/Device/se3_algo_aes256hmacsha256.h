@@ -1,5 +1,11 @@
 #pragma once
 #include "pbkdf2.h"
+//#include "se3_keys.h"
+#include "se3_keys.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <se3c1def.h>
+#include "se3_common.h"
 
 #define PBKDF2_SALT_LEN	32
 #define PBKDF2_ITERATION 1000

@@ -4,6 +4,19 @@
 SE3_COMM_STATUS comm;
 SE3_FLASH_INFO flash;
 
+req_header req_hdr;
+resp_header resp_hdr;
+
+SE3_SERIAL serial;
+
+
+const uint8_t se3_hello[SE3_HELLO_SIZE] = {
+	'H', 'e', 'l', 'l', 'o', ' ', 'S', 'E',
+    'c', 'u', 'b', 'e', 0, 0, 0, 0,
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0
+};
+
 //TODO:fa schifo perché comm è gigante e lui non pulisce niente
 void se3_proto_request_reset()
 {

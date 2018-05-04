@@ -1,6 +1,13 @@
 #pragma once
-#include "se3c1.h"
-
+//#include "se3_keys.h"
+//#include <stdbool.h>
+#include <sha256.h>
+//#include <se3c1def.h>
+#include "se3_keys.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <se3c1def.h>
+#include "se3_common.h"
 /** \brief SE3_ALGO_HMACSHA256 update handler
  *  
  *  Mode is not used

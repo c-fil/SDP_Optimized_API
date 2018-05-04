@@ -8,4 +8,5 @@ typedef struct core_time_{
 void se3c0_time_set(uint64_t t);
 void se3c0_time_inc();
 uint64_t se3c0_time_get();
+bool sec0_now_initialized_get();
 void se3c0_time_init();

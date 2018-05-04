@@ -5,9 +5,9 @@
 ////
 SE3_FLASH_INFO flash;
 SE3_COMM_STATUS comm;
-SE3_SERIAL serial;
-req_header req_hdr;
-resp_header resp_hdr;
+//SE3_SERIAL serial;
+//req_header req_hdr;
+//resp_header resp_hdr;
 uint16_t hwerror;
 
 ////
@@ -22,12 +22,6 @@ uint16_t sessions_algo[SE3_SESSIONS_MAX];
 //uint8_t se3_comm_response_buffer[SE3_COMM_N*SE3_COMM_BLOCK];
 
 
-const uint8_t se3_hello[SE3_HELLO_SIZE] = {
-	'H', 'e', 'l', 'l', 'o', ' ', 'S', 'E',
-    'c', 'u', 'b', 'e', 0, 0, 0, 0,
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0
-};
 
 uint8_t se3_sessions_buf[SE3_SESSIONS_BUF];
 uint8_t* se3_sessions_index[SE3_SESSIONS_MAX];
@@ -40,7 +34,7 @@ void core_init()
 	 */
     memset(&comm, 0, sizeof(SE3_COMM_STATUS));
     memset(&flash, 0, sizeof(SE3_FLASH_INFO));
-//TODO: MEMSET DI QUALSIASI COSA
+    //TODO: MEMSET DI QUALSIASI COSA
     //comm.req_hdr = se3_comm_request_buffer;
     comm.req_hdr = malloc(SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
     //comm.req_data = se3_comm_request_buffer + SE3_REQ_SIZE_HEADER;

@@ -1,6 +1,5 @@
 #include "se3_algo_sha256.h"
 
-
 // key is not used;  mode is not used
 uint16_t se3_algo_Sha256_init(se3_flash_key* key, uint16_t mode, uint8_t* ctx) {
 	B5_tSha256Ctx* sha = (B5_tSha256Ctx*)ctx;

@@ -16,6 +16,11 @@ void se3c0_time_set(uint64_t t)
 	core_time.now_initialized = true;
 }
 
+bool sec0_now_initialized_get()
+{
+	return core_time.now_initialized;
+}
+
 void se3c0_time_inc()
 {
     static unsigned int ms = 0;

@@ -1,6 +1,9 @@
 #pragma once
-#include "se3c1.h"
-
+#include "se3_keys.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <se3c1def.h>
+#include "se3_common.h"
 /** \brief SE3_ALGO_SHA256 init handler
  *  
  *  Key is not used and can be set to SE3_KEY_INVALID

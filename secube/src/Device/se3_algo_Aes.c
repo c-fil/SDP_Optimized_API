@@ -1,6 +1,6 @@
 
 #include "se3_algo_Aes.h"
-#include "se3_common.h"
+//#include "se3_common.h"
 
 
 uint16_t se3_algo_Aes_init(

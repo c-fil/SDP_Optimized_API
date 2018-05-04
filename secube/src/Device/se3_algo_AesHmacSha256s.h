@@ -1,10 +1,15 @@
 
 #pragma once
-#include "se3_common.h"
-
-
-#include "pbkdf2.h"
+//#include "se3_common.h"
+//#include <stdbool.h>
+#include <se3c0def.h>
 #include "se3_keys.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <se3c1def.h>
+#include "se3_common.h"
+#include "pbkdf2.h"
+//#include "se3_keys.h"
 
 /** \brief SE3_ALGO_AES_HMACSHA256 init handler
  *  

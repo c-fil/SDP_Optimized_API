@@ -8,9 +8,13 @@
 #define SE3_FLASH_SIGNATURE_ADDR  ((uint32_t)0x08020000)
 #define SE3_FLASH_SIGNATURE_SIZE  ((size_t)0x40)
 
+/** L0 command handler */
+typedef uint16_t(*se3_cmd_func)(uint16_t, const uint8_t*, uint16_t*, uint8_t*);
+
 void se3_cmd_execute();
 uint16_t se3_exec(se3_cmd_func handler);
 uint16_t invalid_cmd_handler(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
 
 /*
  * COMMANDS
@@ -132,3 +136,37 @@ uint16_t key_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, ui
  *  config : (type:ui16, op:ui16, value[32]) => (value[32])
  */
 uint16_t config(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 CRYPTO_INIT handler
+ *
+ *  Initialize a cryptographic context
+ *   L1_crypto_init : (algo:ui16, mode:ui16, key_id:ui32) => (sid:ui32)
+ */
+uint16_t crypto_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 CRYPTO_UPDATE handler
+ *
+ *  Use a cryptographic context
+*   L1_crypto_update : (
+ *      sid:ui32, flags:ui16, datain1-len:ui16, datain2-len:ui16, pad-to-16[6],
+ *      datain1[datain1-len], pad-to-16[...], datain2[datain2-len])
+ *  => (dataout-len, pad-to-16[14], dataout[dataout-len])
+
+ */
+uint16_t crypto_update(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 CRYPTO_SET_TIME handler
+ *
+ *  Set device time for key validity
+ *  crypto_set_time : (devtime:ui32) => ()
+ */
+uint16_t crypto_set_time(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 CRYPTO_SET_TIME handler
+ *
+ *  Get list of available algorithms
+ *  crypto_list : () => (count:ui16, algoinfo0, algoinfo1, ...)
+ *  algoinfo : (name[16], type:u16, block_size:u16, key_size:u16)
+
+ */
+uint16_t crypto_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);

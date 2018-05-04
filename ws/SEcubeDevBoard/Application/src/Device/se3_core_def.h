@@ -1,15 +1,6 @@
-/*
- * se3_core_def.h
- *
- *  Created on: 29 apr 2018
- *      Author: Pietro
- */
-
-#ifndef APPLICATION_SRC_DEVICE_SE3_CORE_DEF_H_
-#define APPLICATION_SRC_DEVICE_SE3_CORE_DEF_H_
-
-
-
-
-
-#endif /* APPLICATION_SRC_DEVICE_SE3_CORE_DEF_H_ */
+#pragma once
+#include "se3_keys.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <se3c1def.h>
+#include "se3_common.h"
