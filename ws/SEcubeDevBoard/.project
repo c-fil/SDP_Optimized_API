@@ -541,16 +541,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_sha256.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_cmd1_crypto.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1_crypto.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/Device/se3_cmd1_crypto.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_cmd1_crypto.h</locationURI>
-		</link>
-		<link>
 			<name>Application/src/Device/se3_flash.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_flash.c</locationURI>

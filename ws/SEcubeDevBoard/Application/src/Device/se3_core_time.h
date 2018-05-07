@@ -5,7 +5,8 @@ typedef struct core_time_{
 	bool now_initialized;  ///< time was initialized
 }core_time_t;
 
-void se3c0_time_set(uint64_t t);
-void se3c0_time_inc();
-uint64_t se3c0_time_get();
-void se3c0_time_init();
+void time_set(uint64_t t);
+void time_inc();
+uint64_t time_get();
+bool now_initialized_get();
+void time_init();

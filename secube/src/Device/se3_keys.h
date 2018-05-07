@@ -1,5 +1,5 @@
 #pragma once
-#include "se3_flash.h"
+#include "se3_comm_core.h"
 
 #define SE3_TYPE_KEY 100
 

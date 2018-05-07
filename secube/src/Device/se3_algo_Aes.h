@@ -4,8 +4,6 @@
 #include "se3c1def.h"
 
 #include <stdint.h>
-int ciaoM;
-uint16_t maremma;
 
 
 /** \brief SE3_ALGO_AES init handler

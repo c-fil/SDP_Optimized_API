@@ -111,9 +111,9 @@ int main(void)
 	device_init();
 	/* USER CODE END 2 */
 
-	/* Infinite loop */
-	//for(;;);
-	device_loop();
+	/*start se3 core to work */
+	se3_core_start();
+
 	/* USER CODE END 3 */
 	return 0;
 }
@@ -122,20 +122,7 @@ int main(void)
 void device_init()
 {
 	core_init();
-	se3_flash_init();
-    se3c1_init();
-}
 
-void device_loop()
-{
-	for (;;) {
-		if (se3c0.comm.req_ready) {
-			se3c0.comm.resp_ready = false;
-            se3_cmd_execute();
-			se3c0.comm.req_ready = false;
-			se3c0.comm.resp_ready = true;
-		}
-	}
 }
 
 /** System Clock Configuration
