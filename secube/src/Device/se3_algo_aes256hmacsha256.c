@@ -2,7 +2,7 @@
 #include "se3_common.h"
 
 
-// TODO remove and use AesHmacSha256s
+// TODO: remove and use AesHmacSha256s
 
 const uint8_t salt[PBKDF2_SALT_LEN] = {
 	0x1f, 0x25, 0x6c, 0x72, 0xa1, 0x55, 0x9d, 0xbc,

@@ -1,4 +1,3 @@
-#pragma once
 #include "se3_comm_core.h"
 
 #define SE3_TYPE_KEY 100
@@ -16,8 +15,7 @@
  *          name
  */
 typedef struct se3_flash_key_ {
-	uint32_t id;
-	uint32_t validity;
+	uint32_t id;	uint32_t validity;
 	uint16_t data_size;
 	uint16_t name_size;
 	uint8_t* data;

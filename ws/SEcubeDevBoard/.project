@@ -491,16 +491,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/sha256.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/se3_algo_Aes.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_Aes.c</locationURI>
-		</link>
-		<link>
-			<name>Application/src/Device/se3_algo_Aes.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_Aes.h</locationURI>
-		</link>
-		<link>
 			<name>Application/src/Device/se3_algo_AesHmacSha256s.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_algo_AesHmacSha256s.c</locationURI>

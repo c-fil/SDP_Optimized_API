@@ -1,12 +1,15 @@
 #pragma once
 #include <string.h>
 
+#include "se3_security_core.h"
+//#include "se3_fpga_core.h"    //TODO
+//#include "se3_smartcard.h"	//TODO
+
 #include "se3_algo_Aes.h"
 #include "se3_algo_sha256.h"
 #include "se3_algo_HmacSha256.h"
 #include "se3_algo_AesHmacSha256s.h"
 #include "se3_algo_aes256hmacsha256.h"
-//#include "se3_common.h"
 
 
 /** \brief algorithm descriptor type */
@@ -29,6 +32,9 @@ enum {
 /** algorithm description table */
 extern se3_algo_descriptor L1d_algo_table[SE3_ALGO_MAX];
 
+
+
+
 //HANDLER STRANI
 /** \brief L1_crypto_init function type */
 typedef uint16_t(*se3_crypto_init_handler)(
@@ -40,6 +46,28 @@ typedef uint16_t(*se3_crypto_update_handler)(
 	uint16_t datain1_len, const uint8_t* datain1,
 	uint16_t datain2_len, const uint8_t* datain2,
 	uint16_t* dataout_len, uint8_t* dataout);
+
+/** \brief Flash key structure
+ *
+ *  Disposition of the fields within the flash node:
+ *  0:3     id
+ *  4:7     validity
+ *  8:9     data_size
+ *  10:11   name_size
+ *  12:(12+data_size-1)
+ *          data
+ *  (12+data_size):(12+data_size+name_size-1)
+ *          name
+ */
+typedef struct se3_flash_key_ {
+	uint32_t id;
+	uint32_t validity;
+	uint16_t data_size;
+	uint16_t name_size;
+	uint8_t* data;
+	uint8_t* name;
+} se3_flash_key;
+
 
 void dispatcher_handler(
 		int32_t algo,
