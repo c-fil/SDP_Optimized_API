@@ -59,14 +59,14 @@ typedef uint16_t(*se3_crypto_update_handler)(
  *  (12+data_size):(12+data_size+name_size-1)
  *          name
  */
-typedef struct se3_flash_key_ {
-	uint32_t id;
-	uint32_t validity;
-	uint16_t data_size;
-	uint16_t name_size;
-	uint8_t* data;
-	uint8_t* name;
-} se3_flash_key;
+//typedef struct se3_flash_key_ {
+//	uint32_t id;
+//	uint32_t validity;
+//	uint16_t data_size;
+//	uint16_t name_size;
+//	uint8_t* data;
+//	uint8_t* name;
+//} se3_flash_key;
 
 
 void dispatcher_handler(

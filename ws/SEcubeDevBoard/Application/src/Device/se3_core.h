@@ -34,6 +34,8 @@
 ////
 //L0
 ////
+#ifndef se3_req_resp_header_define
+#define se3_req_resp_header_define
 /** \brief serial number data and state */
 typedef struct SE3_SERIAL_ {
     uint8_t data[SE3_SERIAL_SIZE];
@@ -61,6 +63,7 @@ typedef struct se3c0_resp_header_ {
 #endif
     uint32_t cmdtok[SE3_COMM_N - 1];
 } resp_header;
+#endif
 
 
 /** L0 command handler */
@@ -102,43 +105,6 @@ typedef struct SE3_RECORD_INFO_ {
     uint16_t read_access;  ///< required access level for read
     uint16_t write_access;  ///< required access level for write
 } SE3_RECORD_INFO;
-
-se3_cmd_func cmd_handlers[SE3_CMD_MAX] = {
-    /* 0  */ NULL,
-    /* 1  */ challenge,
-    /* 2  */ cmd_login,
-    /* 3  */ logout,
-    /* 4  */ config,
-    /* 5  */ key_edit,
-    /* 6  */ key_list,
-    /* 7  */ crypto_init,
-    /* 8  */ crypto_update,
-    /* 9  */ crypto_list,
-    /* 10 */ crypto_set_time,
-    /* 11 */ echo,
-    /* 12 */ bootmode_reset,
-    /* 13 */ factory_init,
-    /* 14 */ sec_cmd,
-    /* 15 */ cmd_error
-};
-
-// ---- records ----
-enum {
-	SE3_FLASH_TYPE_RECORD = 0xF0  ///< flash node type: record
-};
-
-/** \brief Record information */
-enum {
-	SE3_RECORD_SIZE_TYPE = 2,  ///< record.type field size
-	SE3_RECORD_OFFSET_TYPE = 0, ///< record.type field offset
-	SE3_RECORD_OFFSET_DATA = 2, ///< record.data field offset
-};
-
-// ---- crypto ----
-enum {
-	SE3_SESSIONS_BUF = (32*1024),  ///< session buffer size
-	SE3_SESSIONS_MAX = 100  ///< maximum number of sessions
-};
 
 
 void core_init();
@@ -303,3 +269,21 @@ uint16_t crypto_set_time(uint16_t req_size, const uint8_t* req, uint16_t* resp_s
  */
 uint16_t crypto_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
 
+se3_cmd_func cmd_handlers[SE3_CMD_MAX] = {
+    /* 0  */ NULL,
+    /* 1  */ challenge,
+    /* 2  */ cmd_login,
+    /* 3  */ logout,
+    /* 4  */ config,
+    /* 5  */ key_edit,
+    /* 6  */ key_list,
+    /* 7  */ crypto_init,
+    /* 8  */ crypto_update,
+    /* 9  */ crypto_list,
+    /* 10 */ crypto_set_time,
+    /* 11 */ echo,
+    /* 12 */ bootmode_reset,
+    /* 13 */ factory_init,
+    /* 14 */ sec_cmd,
+    /* 15 */ cmd_error
+};

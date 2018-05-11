@@ -1,3 +1,4 @@
+#pragma once
 #include "se3_comm_core.h"
 
 #define SE3_TYPE_KEY 100
@@ -14,6 +15,8 @@
  *  (12+data_size):(12+data_size+name_size-1)
  *          name
  */
+#ifndef se3_flash_key_defined
+#define se3_flash_key_defined
 typedef struct se3_flash_key_ {
 	uint32_t id;	uint32_t validity;
 	uint16_t data_size;
@@ -21,6 +24,7 @@ typedef struct se3_flash_key_ {
 	uint8_t* data;
 	uint8_t* name;
 } se3_flash_key;
+#endif
 
 /** Flash key fields */
 enum {

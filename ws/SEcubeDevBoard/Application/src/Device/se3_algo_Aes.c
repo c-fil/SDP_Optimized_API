@@ -1,4 +1,4 @@
-
+#pragma once
 #include "se3_algo_Aes.h"
 
 uint16_t se3_algo_Aes_init(

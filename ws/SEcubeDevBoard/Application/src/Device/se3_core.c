@@ -20,12 +20,7 @@ uint16_t sessions_algo[SE3_SESSIONS_MAX];
 //uint8_t se3_comm_response_buffer[SE3_COMM_N*SE3_COMM_BLOCK];
 
 
-const uint8_t se3_hello[SE3_HELLO_SIZE] = {
-	'H', 'e', 'l', 'l', 'o', ' ', 'S', 'E',
-    'c', 'u', 'b', 'e', 0, 0, 0, 0,
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0
-};
+
 
 uint8_t se3_sessions_buf[SE3_SESSIONS_BUF];
 uint8_t* se3_sessions_index[SE3_SESSIONS_MAX];

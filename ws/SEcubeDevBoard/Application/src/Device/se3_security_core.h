@@ -7,7 +7,6 @@
 #include "se3c0def.h"
 #include "se3c1def.h"
 
-
 #include <stdbool.h>
 
 ///** \brief Flash key structure
@@ -22,11 +21,14 @@
 // *  (12+data_size):(12+data_size+name_size-1)
 // *          name
 // */
-//typedef struct se3_flash_key_ {
-//	uint32_t id;
-//	uint32_t validity;
-//	uint16_t data_size;
-//	uint16_t name_size;
-//	uint8_t* data;
-//	uint8_t* name;
-//} se3_flash_key;
+#ifndef se3_flash_key_defined
+#define se3_flash_key_defined
+typedef struct se3_flash_key_ {
+	uint32_t id;
+	uint32_t validity;
+	uint16_t data_size;
+	uint16_t name_size;
+	uint8_t* data;
+	uint8_t* name;
+} se3_flash_key;
+#endif

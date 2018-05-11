@@ -1,11 +1,12 @@
-
+#pragma once
 #include "stdbool.h"
 #include "se3_flash.h"
+#include "se3c0def.h"
+#include "se3_common.h"
 
 #ifndef CUBESIM
 #include <se3_sdio.h>
 #endif
-
 
 
 
@@ -39,17 +40,48 @@ typedef struct s3_storage_range_ {
 	uint32_t count;
 } s3_storage_range;
 
-/** USB data handlers return values */
+#ifndef se3_req_resp_header_define
+#define se3_req_resp_header_define
+
+typedef struct se3c0_req_header_ {
+    uint16_t cmd;
+    uint16_t cmd_flags;
+    uint16_t len;
+#if SE3_CONF_CRC
+    uint16_t crc;
+#endif
+    uint32_t cmdtok[SE3_COMM_N - 1];
+} req_header;
+
+typedef struct se3c0_resp_header_ {
+    uint16_t ready;
+    uint16_t status;
+    uint16_t len;
+#if SE3_CONF_CRC
+    uint16_t crc;
+#endif
+    uint32_t cmdtok[SE3_COMM_N - 1];
+} resp_header;
+
+typedef struct SE3_SERIAL_ {
+    uint8_t data[SE3_SERIAL_SIZE];
+    bool written;  ///< Indicates whether the serial number has been set (by FACTORY_INIT)
+} SE3_SERIAL;
+
+#endif
+
+const uint8_t se3_hello[SE3_HELLO_SIZE] = {
+	'H', 'e', 'l', 'l', 'o', ' ', 'S', 'E',
+    'c', 'u', 'b', 'e', 0, 0, 0, 0,
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0
+};
+
+// ---- crypto ----
 enum {
-	SE3_PROTO_OK = 0,  ///< Report OK to the USB HAL
-	SE3_PROTO_FAIL = 1,  ///< Report FAIL to the USB HAL
-	SE3_PROTO_BUSY = 2  ///< Report BUSY to the USB HAL
+	SE3_SESSIONS_BUF = (32*1024),  ///< session buffer size
+	SE3_SESSIONS_MAX = 100  ///< maximum number of sessions
 };
-
-enum s3_storage_range_direction {
-	range_write, range_read
-};
-
 
 void se3_communication_init();
 

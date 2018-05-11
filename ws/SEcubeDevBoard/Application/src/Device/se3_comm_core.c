@@ -4,10 +4,38 @@
 
 SE3_FLASH_INFO flash;
 SE3_COMM_STATUS *comm; //pointer to se3_core structure
+req_header* req_hdr;
+resp_header* resp_hdr;
+SE3_SERIAL* serial;
 
+/** USB data handlers return values */
+enum {
+	SE3_PROTO_OK = 0,  ///< Report OK to the USB HAL
+	SE3_PROTO_FAIL = 1,  ///< Report FAIL to the USB HAL
+	SE3_PROTO_BUSY = 2  ///< Report BUSY to the USB HAL
+};
 
+enum s3_storage_range_direction {
+	range_write = 0, range_read = 1
+};
 
-void se3_communication_init(SE3_COMM_STATUS* comm_ref){
+// ---- records ----
+enum {
+	SE3_FLASH_TYPE_RECORD = 0xF0  ///< flash node type: record
+};
+
+/** \brief Record information */
+enum {
+	SE3_RECORD_SIZE_TYPE = 2,  ///< record.type field size
+	SE3_RECORD_OFFSET_TYPE = 0, ///< record.type field offset
+	SE3_RECORD_OFFSET_DATA = 2, ///< record.data field offset
+};
+
+void se3_communication_init(SE3_COMM_STATUS* comm_ref, req_header * req_hdr_comm,
+		resp_header* resp_hdr_comm, SE3_SERIAL* serial_comm){
+	req_hdr = req_hdr_comm;
+	resp_hdr = resp_hdr_comm;
+	serial = serial_comm;
 	comm = comm_ref;
     memset(comm_ref, 0, sizeof(SE3_COMM_STATUS));
     memset(&flash, 0, sizeof(SE3_FLASH_INFO));
@@ -217,22 +245,22 @@ void handle_req_recv(int index, const uint8_t* blockdata)
 
         // read and decode header
         memcpy(comm->req_hdr, blockdata, SE3_REQ_SIZE_HEADER);
-        SE3_GET16(comm->req_hdr, SE3_REQ_OFFSET_CMD, req_hdr.cmd);
-        SE3_GET16(comm->req_hdr, SE3_REQ_OFFSET_CMDFLAGS, req_hdr.cmd_flags);
-        SE3_GET16(comm->req_hdr, SE3_REQ_OFFSET_LEN, req_hdr.len);
-        SE3_GET32(comm->req_hdr, SE3_REQ_OFFSET_CMDTOKEN, req_hdr.cmdtok[0]);
+        SE3_GET16(comm->req_hdr, SE3_REQ_OFFSET_CMD, req_hdr->cmd);
+        SE3_GET16(comm->req_hdr, SE3_REQ_OFFSET_CMDFLAGS, req_hdr->cmd_flags);
+        SE3_GET16(comm->req_hdr, SE3_REQ_OFFSET_LEN, req_hdr->len);
+        SE3_GET32(comm->req_hdr, SE3_REQ_OFFSET_CMDTOKEN, req_hdr->cmdtok[0]);
 #if SE3_CONF_CRC
-		SE3_GET16(comm->req_hdr, SE3_REQ_OFFSET_CRC, req_hdr.crc);
+		SE3_GET16(comm->req_hdr, SE3_REQ_OFFSET_CRC, req_hdr->crc);
 #endif
         // read data
         memcpy(comm->req_data, blockdata + SE3_REQ_SIZE_HEADER, SE3_COMM_BLOCK - SE3_REQ_SIZE_HEADER);
 
-        nblocks = req_hdr.len / SE3_COMM_BLOCK;
-        if (req_hdr.len%SE3_COMM_BLOCK != 0) {
+        nblocks = req_hdr->len / SE3_COMM_BLOCK;
+        if (req_hdr->len%SE3_COMM_BLOCK != 0) {
             nblocks++;
         }
         if (nblocks > SE3_COMM_N - 1) {
-            resp_hdr.status = SE3_ERR_COMM;
+            resp_hdr->status = SE3_ERR_COMM;
             comm->req_bmap = 0;
             comm->resp_ready = true;
         }
@@ -243,13 +271,13 @@ void handle_req_recv(int index, const uint8_t* blockdata)
     else {
         // REQDATA block
         // read header
-        SE3_GET32(blockdata, SE3_REQDATA_OFFSET_CMDTOKEN, req_hdr.cmdtok[index]);
+        SE3_GET32(blockdata, SE3_REQDATA_OFFSET_CMDTOKEN, req_hdr->cmdtok[index]);
         // read data
         memcpy(
             comm->req_data + 1 * (SE3_COMM_BLOCK - SE3_REQ_SIZE_HEADER) + (index - 1)*(SE3_COMM_BLOCK - SE3_REQDATA_SIZE_HEADER),
             blockdata + SE3_REQDATA_SIZE_HEADER,
             SE3_COMM_BLOCK - SE3_REQDATA_SIZE_HEADER);
-        SE3_GET32(blockdata, 0, req_hdr.cmdtok[index]);
+        SE3_GET32(blockdata, 0, req_hdr->cmdtok[index]);
         // update bit map
         SE3_BIT_CLEAR(comm->req_bmap, index);
     }
@@ -269,7 +297,7 @@ void handle_resp_send(int index, uint8_t* blockdata)
         // discover
         memcpy(blockdata + SE3_DISCO_OFFSET_MAGIC, se3_magic + SE3_MAGIC_SIZE / 2, SE3_MAGIC_SIZE / 2);
         memcpy(blockdata + SE3_DISCO_OFFSET_MAGIC + SE3_MAGIC_SIZE / 2, se3_magic, SE3_MAGIC_SIZE / 2);
-        memcpy(blockdata + SE3_DISCO_OFFSET_SERIAL, serial.data, SE3_SERIAL_SIZE);
+        memcpy(blockdata + SE3_DISCO_OFFSET_SERIAL, serial->data, SE3_SERIAL_SIZE);
         memcpy(blockdata + SE3_DISCO_OFFSET_HELLO, se3_hello, SE3_HELLO_SIZE);
         u16tmp = (comm->locked) ? (1) : (0);
         SE3_SET16(blockdata, SE3_DISCO_OFFSET_STATUS, u16tmp);
@@ -285,11 +313,11 @@ void handle_resp_send(int index, uint8_t* blockdata)
                     // encode and write header
                     u16tmp = 1;
                     SE3_SET16(comm->resp_hdr, SE3_RESP_OFFSET_READY, u16tmp);
-                    SE3_SET16(comm->resp_hdr, SE3_RESP_OFFSET_STATUS, resp_hdr.status);
-                    SE3_SET16(comm->resp_hdr, SE3_RESP_OFFSET_LEN, resp_hdr.len);
-                    SE3_SET32(comm->resp_hdr, SE3_RESP_OFFSET_CMDTOKEN, resp_hdr.cmdtok[0]);
+                    SE3_SET16(comm->resp_hdr, SE3_RESP_OFFSET_STATUS, resp_hdr->status);
+                    SE3_SET16(comm->resp_hdr, SE3_RESP_OFFSET_LEN, resp_hdr->len);
+                    SE3_SET32(comm->resp_hdr, SE3_RESP_OFFSET_CMDTOKEN, resp_hdr->cmdtok[0]);
 #if SE3_CONF_CRC
-                    SE3_SET16(se3c0.comm->resp_hdr, SE3_RESP_OFFSET_CRC, se3c0.resp_hdr.crc);
+                    SE3_SET16(comm->resp_hdr, SE3_RESP_OFFSET_CRC, resp_hdr->crc);
 #endif
                     memcpy(blockdata, comm->resp_hdr, SE3_RESP_SIZE_HEADER);
 
@@ -299,7 +327,7 @@ void handle_resp_send(int index, uint8_t* blockdata)
                 else {
                     // RESPDATA block
                     // write header
-                    SE3_SET32(blockdata, SE3_RESPDATA_OFFSET_CMDTOKEN, resp_hdr.cmdtok[index]);
+                    SE3_SET32(blockdata, SE3_RESPDATA_OFFSET_CMDTOKEN, resp_hdr->cmdtok[index]);
                     // write data
                     memcpy(
                         blockdata + SE3_RESPDATA_SIZE_HEADER,
@@ -544,8 +572,8 @@ bool se3_flash_init()
 		if (it.type != 0) {
 			flash.used += it.blocks*SE3_FLASH_BLOCK_SIZE;
             if (it.type == SE3_FLASH_TYPE_SERIAL) {
-                memcpy(serial.data, it.addr, SE3_SERIAL_SIZE);
-                serial.written = true;
+                memcpy(serial->data, it.addr, SE3_SERIAL_SIZE);
+                serial->written = true;
             }
 		}
 	}
