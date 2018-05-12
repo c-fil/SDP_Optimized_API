@@ -52,12 +52,12 @@ enum {
 };
 
 /** L0 command codes */
-enum {
-    SE3_CMD0_FACTORY_INIT = 1,
-    SE3_CMD0_ECHO = 2,
-    SE3_CMD0_L1 = 3,
-	SE3_CMD0_BOOT_MODE_RESET = 4
-};
+
+#define    SE3_CMD_FACTORY_INIT 1
+#define    SE3_CMD_ECHO 2
+#define   SE3_CMD_MIX 3
+#define	  SE3_CMD_BOOT_MODE_RESET 4
+
 
 /** L0 command flags */
 enum {

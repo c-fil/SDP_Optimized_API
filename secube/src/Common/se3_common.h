@@ -10,6 +10,7 @@
 #include "aes256.h"
 #include "sha256.h"
 #include "pbkdf2.h"
+#include "se3c1def.h"
 
 extern const uint8_t se3_magic[SE3_MAGIC_SIZE];
 
