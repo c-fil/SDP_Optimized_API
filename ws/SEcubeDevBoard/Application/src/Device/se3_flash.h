@@ -11,7 +11,7 @@
 #define SE3_FLASH_SECTOR_SIZE (128*1024)
 #endif
 
-#include "stdbool.h"
+#include <stdbool.h>
 
 /*
 Structure of flash:
@@ -66,5 +66,7 @@ enum {
 
 
 
-
-
+bool flash_fill(uint32_t addr, uint8_t val, size_t size);
+bool flash_zero(uint32_t addr, size_t size);
+bool flash_program(uint32_t addr, const uint8_t* data, size_t size);
+bool flash_erase(uint32_t sector);

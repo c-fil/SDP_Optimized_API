@@ -36,7 +36,7 @@
 #include "stm32f4xx_it.h"
 
 /* USER CODE BEGIN 0 */
-#include "se3c0.h"
+#include "../../ws/SEcubeDevBoard/Application/src/Device/se3_core_time.h"
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/

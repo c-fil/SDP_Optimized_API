@@ -2,8 +2,8 @@
 #include <string.h>
 
 #include "se3_security_core.h"
-//#include "se3_fpga_core.h"    //TODO
-//#include "se3_smartcard.h"	//TODO
+//#include "se3_fpga_core.h"    //TODO: FPGA core to be implemented
+//#include "se3_smartcard.h"	//TODO: SMARTCARD core to be implemented
 
 #include "se3_algo_Aes.h"
 #include "se3_algo_sha256.h"

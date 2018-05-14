@@ -1,5 +1,6 @@
 #include "se3_core.h"
 #include "se3c0def.h"
+#include "se3_rand.h"
 ////
 //L0
 ////
@@ -654,7 +655,7 @@ uint16_t key_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, ui
 
     SE3_GET16(req, SE3_CMD1_KEY_LIST_REQ_OFF_SKIP, req_params.skip);
     SE3_GET16(req, SE3_CMD1_KEY_LIST_REQ_OFF_NMAX, req_params.nmax);
-	req_params.salt = req + SE3_CMD1_KEY_LIST_REQ_OFF_SALT;
+	req_params.salt = (uint8_t*) (req + SE3_CMD1_KEY_LIST_REQ_OFF_SALT);
 
 	/* ! will write key data to request buffer */
 	key.data = (uint8_t*)req + ((SE3_CMD1_KEY_LIST_REQ_SIZE / 16) + 1) * 16;

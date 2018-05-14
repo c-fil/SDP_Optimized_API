@@ -4,7 +4,7 @@
 #include "aes256.h"
 #include "crc16.h"
 #include "sha256.h"
-//#include "se3c0def.h"
+
 #include "se3c1def.h"
 
 #include <stdbool.h>

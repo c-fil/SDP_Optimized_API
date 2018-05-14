@@ -1,11 +1,9 @@
 #pragma once
-#include "stdbool.h"
-#include "se3_flash.h"
 #include "se3_common.h"
-
 #ifndef CUBESIM
 #include <se3_sdio.h>
 #endif
+#include "se3_flash.h"
 
 /** USB data handlers return values */
 

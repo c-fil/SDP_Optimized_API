@@ -1,7 +1,6 @@
 #include "se3_comm_core.h"
 
 
-
 SE3_FLASH_INFO flash;
 SE3_COMM_STATUS *comm; //pointer to se3_core structure
 req_header* req_hdr;
@@ -44,7 +43,7 @@ void se3_communication_init(SE3_COMM_STATUS* comm_ref, req_header * req_hdr_comm
 	se3_flash_init();
 }
 
-//TODO:fa schifo perch� comm � gigante e lui non pulisce niente
+//TODO:fa schifo perche' comm e' gigante e lui non pulisce niente
 void se3_proto_request_reset()
 {
     comm->req_ready = false;

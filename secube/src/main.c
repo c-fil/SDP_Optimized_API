@@ -44,6 +44,7 @@
 #include "usb_device.h"
 #include "gpio.h"
 #include "fmc.h"
+//#include "se3_core.h"
 #include "../../ws/SEcubeDevBoard/Application/src/Device/se3_core.h"
 /* USER CODE BEGIN Includes */
 
