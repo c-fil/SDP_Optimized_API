@@ -60,6 +60,16 @@ typedef struct s3_storage_range_ {
 	uint32_t count;
 } s3_storage_range;
 
+/** \brief Flash node iterator structure */
+typedef struct se3_flash_it_ {
+	const uint8_t* addr;
+	uint8_t type;
+	uint16_t size;
+	uint16_t blocks;
+	size_t pos;
+} se3_flash_it;
+
+
 #ifndef se3_req_resp_header_define
 #define se3_req_resp_header_define
 

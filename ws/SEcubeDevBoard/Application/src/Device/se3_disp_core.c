@@ -65,3 +65,131 @@ void dispatcher_handler (
     		break;
     }
 }
+
+
+uint16_t crypto_init(se3_mem *sessions, bool logged, uint32_t key_identificator,  uint16_t modality)
+{
+	/* E' un comando lanciato dall'host che riceve la request,
+	 * riempie le strutture dati adeguate ed esegue la funzione di
+	 * init adeguata all'algoritmo richiesto; la struttura di input
+	 * contiene una chiave, la cui validità verrà controllata.
+	 * La richiesta spacchettata ci darà infos su mode, key e context (algo)
+	 * usati come input per l'handler precedentemente scelto.
+	 *
+	 *
+	 * */
+    struct {
+        uint16_t algo;
+        uint16_t mode;
+        uint32_t key_id;
+    } req_params;
+    struct {
+        uint32_t sid;
+    } resp_params;
+
+    se3_flash_key key;
+    se3_flash_it it = { .addr = NULL };
+    se3_crypto_init_handler handler = NULL;
+    uint32_t status;
+    int sid;
+    uint8_t* ctx;
+
+    if (req_size != SE3_CMD1_CRYPTO_INIT_REQ_SIZE) {
+        SE3_TRACE(("[L1d_crypto_init] req size mismatch\n"));
+        return SE3_ERR_PARAMS;
+    }
+
+    if (!login.y) {
+        SE3_TRACE(("[L1d_crypto_init] not logged in\n"));
+        return SE3_ERR_ACCESS;
+    }
+
+   // SE3_GET16(req, SE3_CMD1_CRYPTO_INIT_REQ_OFF_ALGO, req_params.algo);
+   // SE3_GET16(req, SE3_CMD1_CRYPTO_INIT_REQ_OFF_MODE, req_params.mode);
+    //SE3_GET32(req, SE3_CMD1_CRYPTO_INIT_REQ_OFF_KEY_ID, req_params.key_id);
+   //////////////////// || \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    /////////////////// || \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+  ////////////////////  \/ \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+	if(!se_key_work(&req_params.algo,modality, key_identificator))
+		return SE3_ERR_PARAMS;
+  /////////////////////////////////////////////////////////////////////
+
+	if (req_params.algo < SE3_ALGO_MAX) {
+        handler = L1d_algo_table[req_params.algo].init;
+    }
+    if (handler == NULL) {
+        SE3_TRACE(("[L1d_crypto_init] algo not found\n"));
+        return SE3_ERR_PARAMS;
+    }
+
+
+
+
+    // use request buffer to temporarily store key data
+    // !! modifying request buffer
+    key.data = (uint8_t*)req + 16;
+    key.name = NULL;
+    key.id = req_params.key_id;
+
+    if (key.id == SE3_KEY_INVALID) {
+        memset(key.data, 0, SE3_KEY_DATA_MAX);
+    }
+    else {
+        se3_flash_it_init(&it);
+        if (!se3_key_find(key.id, &it)) {
+            it.addr = NULL;
+        }
+        if (NULL == it.addr) {
+            SE3_TRACE(("[L1d_crypto_init] key not found\n"));
+            return SE3_ERR_RESOURCE;
+        }
+        se3_key_read(&it, &key);
+
+		if (key.validity < time_get() || !now_initialized_get()) {
+			SE3_TRACE(("[L1d_crypto_init] key expired\n"));
+			return SE3_ERR_EXPIRED;
+		}
+    }
+
+    resp_params.sid = SE3_SESSION_INVALID;
+    sid = se3_mem_alloc(&(sessions), L1d_algo_table[req_params.algo].size);
+    if (sid >= 0) {
+        resp_params.sid = (uint32_t)sid;
+    }
+
+    if (resp_params.sid == SE3_SESSION_INVALID) {
+        SE3_TRACE(("[L1d_crypto_init] cannot allocate session\n"));
+        return SE3_ERR_MEMORY;
+    }
+
+    ctx = se3_mem_ptr(&(sessions), sid);
+    if (ctx == NULL) {
+        // this should not happen
+        SE3_TRACE(("[L1d_crypto_init] NULL session pointer\n"));
+        return SE3_ERR_HW;
+    }
+
+    status = handler(&key, req_params.mode, ctx);
+
+    if (SE3_OK != status) {
+        // free the allocated session
+        se3_mem_free(&(sessions), (int32_t)resp_params.sid);
+
+        SE3_TRACE(("[L1d_crypto_init] crypto handler failed\n"));
+        return status;
+    }
+
+    // link session to algo
+    sessions_algo[resp_params.sid] = req_params.algo;
+
+
+    SE3_SET32(resp, SE3_CMD1_CRYPTO_INIT_RESP_OFF_SID, resp_params.sid);
+
+    *resp_size = SE3_CMD1_CRYPTO_INIT_RESP_SIZE;
+
+	return SE3_OK;
+}
+
+
+

@@ -1,6 +1,7 @@
 #include "se3_comm_core.h"
 
 
+
 SE3_FLASH_INFO flash;
 SE3_COMM_STATUS *comm; //pointer to se3_core structure
 req_header* req_hdr;

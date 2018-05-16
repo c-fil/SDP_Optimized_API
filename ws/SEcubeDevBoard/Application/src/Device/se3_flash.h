@@ -38,14 +38,6 @@ typedef struct SE3_FLASH_INFO_ {
     size_t allocated;
 } SE3_FLASH_INFO;
 
-/** \brief Flash node iterator structure */
-typedef struct se3_flash_it_ {
-	const uint8_t* addr;
-	uint8_t type;
-	uint16_t size;
-	uint16_t blocks;
-	size_t pos;
-} se3_flash_it;
 
 /** Flash nodes' default and reserved types */
 enum {

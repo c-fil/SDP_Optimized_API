@@ -32,9 +32,10 @@ static se3_cmd_func cmd_handlers[SE3_CMD_MAX] = {
 //L1
 ////
 SE3_LOGIN_STATUS login;
-SE3_RECORD_INFO records[SE3_RECORD_MAX];
 se3_mem sessions;
-uint16_t sessions_algo[SE3_SESSIONS_MAX];
+SE3_RECORD_INFO records[SE3_RECORD_MAX];
+
+uint16_t sessions_algo[SE3_SESSIONS_MAX]; //TODO: SDP: Dynamically allocate sessions
 
 //uint8_t se3_comm_request_buffer[SE3_COMM_N*SE3_COMM_BLOCK];
 //uint8_t se3_comm_response_buffer[SE3_COMM_N*SE3_COMM_BLOCK];
@@ -766,6 +767,7 @@ uint16_t config(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint
 	return SE3_OK;
 }
 
+
 uint16_t crypto_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     struct {
@@ -869,6 +871,7 @@ uint16_t crypto_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size,
 
 	return SE3_OK;
 }
+
 
 uint16_t crypto_update(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
