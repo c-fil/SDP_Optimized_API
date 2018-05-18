@@ -6,6 +6,7 @@
 SE3_COMM_STATUS comm;
 req_header req_hdr;
 resp_header resp_hdr;
+SE3_SERIAL* serial_comm;
 
 static se3_cmd_func cmd_handlers[SE3_CMD_MAX] = {
     /* 0  */ NULL,
@@ -69,7 +70,8 @@ void core_init()
 
 	/* COMMUNICATION CORE INITIALIZATION*/
 
-	se3_communication_init();
+
+	se3_communication_init(&comm, &req_hdr, &resp_hdr, serial_comm);
 	se3_dispatcher_init();
 
 
