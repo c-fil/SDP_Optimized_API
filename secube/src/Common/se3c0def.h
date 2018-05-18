@@ -40,6 +40,8 @@ enum {
 	SE3_SERIAL_SIZE = 32
 };
 
+
+
 /** L0 error codes */
 enum {
     SE3_OK = 0,  ///< success

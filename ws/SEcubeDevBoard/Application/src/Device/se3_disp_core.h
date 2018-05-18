@@ -10,6 +10,17 @@
 #include "se3_algo_HmacSha256.h"
 #include "se3_algo_AesHmacSha256s.h"
 #include "se3_algo_aes256hmacsha256.h"
+#include "se3_memory.h"
+
+// ---- records ----
+
+#define SE3_FLASH_TYPE_RECORD 0xF0  ///< flash node type: record
+
+
+/** \brief Record information */
+#define SE3_RECORD_SIZE_TYPE 2  ///< record.type field size
+#define SE3_RECORD_OFFSET_TYPE 0 ///< record.type field offset
+#define SE3_RECORD_OFFSET_DATA 2 ///< record.data field offset
 
 //HANDLER STRANI
 /** \brief L1_crypto_init function type */
@@ -73,3 +84,13 @@ void dispatcher_handler(
 		const uint8_t *salt, size_t nsalt,
 		uint32_t iterations,
 		uint8_t *out, size_t nout);
+
+
+
+void se3_dispatcher_init();
+
+bool record_set(uint16_t type, const uint8_t* data);
+
+bool record_get(uint16_t type, uint8_t* data);
+
+bool record_find(uint16_t record_type, se3_flash_it* it);

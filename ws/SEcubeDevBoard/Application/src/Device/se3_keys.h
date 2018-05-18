@@ -1,5 +1,5 @@
 #pragma once
-#include "./se3_comm_core.h"
+#include "./se3_security_core.h"
 
 #define SE3_TYPE_KEY 100
 

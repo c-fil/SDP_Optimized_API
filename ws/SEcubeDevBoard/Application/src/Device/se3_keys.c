@@ -1,5 +1,6 @@
 #include "se3_keys.h"
 
+
 enum {
 	SE3_KEY_OFFSET_ID = 0,
 	SE3_KEY_OFFSET_VALIDITY = 4,

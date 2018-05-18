@@ -7,7 +7,7 @@
 //#include "se3c1def.h"
 //#include "se3_common.h"
 ///////
-//#include "se3_comm_core.h"
+#include "se3_comm_core.h"
 #include "se3_disp_core.h"
 #include "se3_core_time.h"
 #include "se3_memory.h"
@@ -33,10 +33,10 @@
 #ifndef se3_req_resp_header_define
 #define se3_req_resp_header_define
 /** \brief serial number data and state */
-typedef struct SE3_SERIAL_ {
-    uint8_t data[SE3_SERIAL_SIZE];
-    bool written;  ///< Indicates whether the serial number has been set (by FACTORY_INIT)
-} SE3_SERIAL;
+//typedef struct SE3_SERIAL_ {
+//    uint8_t data[SE3_SERIAL_SIZE];
+//    bool written;  ///< Indicates whether the serial number has been set (by FACTORY_INIT)
+//} SE3_SERIAL;
 
 /** \brief decoded request header */
 typedef struct se3c0_req_header_ {

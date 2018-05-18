@@ -14,6 +14,15 @@
 
 extern const uint8_t se3_magic[SE3_MAGIC_SIZE];
 
+typedef struct SE3_SERIAL_ {
+    uint8_t data[SE3_SERIAL_SIZE];
+    bool written;  ///< Indicates whether the serial number has been set (by FACTORY_INIT)
+} SE3_SERIAL;
+
+
+////
+SE3_SERIAL serial;
+
 /**
  *  \brief Compute length of data in a request in terms of SE3_COMM_BLOCK blocks
  *  

@@ -3,8 +3,6 @@
 #include "se3_rand.h"
 ////
 //L0
-////
-SE3_SERIAL serial;
 SE3_COMM_STATUS comm;
 req_header req_hdr;
 resp_header resp_hdr;
@@ -17,7 +15,7 @@ static se3_cmd_func cmd_handlers[SE3_CMD_MAX] = {
     /* 4  */ config,
     /* 5  */ key_edit,
     /* 6  */ key_list,
-    /* 7  */ crypto_init,
+    /* 7  */ NULL, //crypto_init,
     /* 8  */ crypto_update,
     /* 9  */ crypto_list,
     /* 10 */ crypto_set_time,
@@ -72,6 +70,7 @@ void core_init()
 	/* COMMUNICATION CORE INITIALIZATION*/
 
 	se3_communication_init();
+	se3_dispatcher_init();
 
 
     /*
@@ -767,7 +766,7 @@ uint16_t config(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint
 	return SE3_OK;
 }
 
-
+/*
 uint16_t crypto_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     struct {
@@ -871,7 +870,7 @@ uint16_t crypto_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size,
 
 	return SE3_OK;
 }
-
+*/
 
 uint16_t crypto_update(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {

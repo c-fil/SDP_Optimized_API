@@ -42,7 +42,6 @@ typedef struct SE3_FLASH_INFO_ {
 /** Flash nodes' default and reserved types */
 enum {
 	SE3_FLASH_TYPE_INVALID = 0,  ///< Invalid node
-	SE3_FLASH_TYPE_SERIAL = 1,  ///< Device's serial number
 	SE3_FLASH_TYPE_CONT = 0xFE,  ///< Continuation of previous node
 	SE3_FLASH_TYPE_EMPTY = 0xFF  ///< Not written yet
 };
