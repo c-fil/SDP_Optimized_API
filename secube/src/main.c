@@ -77,7 +77,6 @@ int main(void)
 	/* USER CODE BEGIN 1 */
 	// Init SEcube structures
 
-
 	/* USER CODE END 1 */
 
 	/* MCU Configuration----------------------------------------------------------*/

@@ -6,7 +6,7 @@
 SE3_COMM_STATUS *comm; //pointer to se3_core structure
 req_header* req_hdr;
 resp_header* resp_hdr;
-//SE3_SERIAL* serial;
+SE3_SERIAL* serial;
 
 const uint8_t se3_hello[SE3_HELLO_SIZE] = {
 	'H', 'e', 'l', 'l', 'o', ' ', 'S', 'E',
@@ -17,19 +17,22 @@ const uint8_t se3_hello[SE3_HELLO_SIZE] = {
 
 void se3_communication_init(SE3_COMM_STATUS* comm_ref, req_header * req_hdr_comm,
 		resp_header* resp_hdr_comm, SE3_SERIAL* serial_comm){
+
 	req_hdr = req_hdr_comm;
 	resp_hdr = resp_hdr_comm;
-	//serial = serial_comm;
+	serial = serial_comm;
 	comm = comm_ref;
-    memset(comm_ref, 0, sizeof(SE3_COMM_STATUS));
+    memset(comm, 0, sizeof(SE3_COMM_STATUS));
 
 //TODO: MEMSET DI QUALSIASI COSA
     //comm.req_hdr = se3_comm_request_buffer;
-    comm->req_hdr = malloc(SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
+   // comm->req_hdr = malloc(SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
+    memset(comm->req_hdr, 0, SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
     //comm.req_data = se3_comm_request_buffer + SE3_REQ_SIZE_HEADER;
     comm->req_data =  comm->req_hdr + SE3_REQ_SIZE_HEADER;
     //comm.resp_hdr = se3_comm_response_buffer;
-    comm->resp_hdr = malloc(SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
+    //comm->resp_hdr = malloc(SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
+    memset(comm->resp_hdr, 0, SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
     //comm.resp_data = se3_comm_response_buffer + SE3_RESP_SIZE_HEADER;
     comm->resp_data =  comm->resp_hdr + SE3_RESP_SIZE_HEADER;
 
@@ -281,7 +284,7 @@ void handle_resp_send(int index, uint8_t* blockdata)
         // discover
         memcpy(blockdata + SE3_DISCO_OFFSET_MAGIC, se3_magic + SE3_MAGIC_SIZE / 2, SE3_MAGIC_SIZE / 2);
         memcpy(blockdata + SE3_DISCO_OFFSET_MAGIC + SE3_MAGIC_SIZE / 2, se3_magic, SE3_MAGIC_SIZE / 2);
-        memcpy(blockdata + SE3_DISCO_OFFSET_SERIAL, serial.data, SE3_SERIAL_SIZE);
+        memcpy(blockdata + SE3_DISCO_OFFSET_SERIAL, serial->data, SE3_SERIAL_SIZE);
         memcpy(blockdata + SE3_DISCO_OFFSET_HELLO, se3_hello, SE3_HELLO_SIZE);
         u16tmp = (comm->locked) ? (1) : (0);
         SE3_SET16(blockdata, SE3_DISCO_OFFSET_STATUS, u16tmp);

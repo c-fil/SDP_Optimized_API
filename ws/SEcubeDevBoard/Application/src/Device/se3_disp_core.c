@@ -2,6 +2,7 @@
 #include "se3_common.h"
 
 
+
 /* Cryptographic algorithms handlers and display info */
 se3_algo_descriptor L1d_algo_table[SE3_ALGO_MAX] = {
 	{
@@ -192,9 +193,9 @@ uint16_t crypto_init(se3_mem *sessions, bool logged, uint32_t key_identificator,
 	return SE3_OK;
 }
 
-void se3_dispatcher_init(){
+void se3_dispatcher_init(SE3_SERIAL* serial_disp){
 
-	se3_security_init();
+	se3_security_init(serial_disp);
 }
 
 /*

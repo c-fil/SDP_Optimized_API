@@ -6,7 +6,13 @@
 SE3_COMM_STATUS comm;
 req_header req_hdr;
 resp_header resp_hdr;
-SE3_SERIAL* serial_comm;
+
+
+
+
+////
+SE3_SERIAL serial;
+
 
 static se3_cmd_func cmd_handlers[SE3_CMD_MAX] = {
     /* 0  */ NULL,
@@ -51,6 +57,7 @@ void se3_core_start(){
 	while(1){
 		//wait for new request/command and execute it
 		while(!comm.req_ready);
+
 		comm.resp_ready = false;
 		se3_cmd_execute();
 		comm.req_ready = false;
@@ -70,17 +77,20 @@ void core_init()
 
 	/* COMMUNICATION CORE INITIALIZATION*/
 
+    memset(&serial,0,sizeof(SE3_SERIAL));
+    memset(&req_hdr,0,sizeof(req_header));
+    memset(&resp_hdr,0,sizeof(resp_header));
+    se3_communication_init(&comm, &req_hdr, &resp_hdr, &serial);
+	se3_dispatcher_init(&serial);
 
-	se3_communication_init(&comm, &req_hdr, &resp_hdr, serial_comm);
-	se3_dispatcher_init();
+
 
 
     /*
      * L1 INIT
      */
     memset((void*)&login, 0, sizeof(SE3_LOGIN_STATUS));
-    memset((void*)&records[0], 0, sizeof(SE3_RECORD_INFO));
-    memset((void*)&records[1], 0, sizeof(SE3_RECORD_INFO));
+    memset((void*)&records, 0, sizeof(SE3_RECORD_INFO));
     memset((void*)&sessions, 0, sizeof(se3_mem));
     memset((void*)&sessions_algo, 0, SE3_SESSIONS_MAX*sizeof(uint16_t));
 
@@ -405,7 +415,7 @@ uint16_t cmd_error(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, u
 
 uint16_t challenge(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
-    static B5_tSha256Ctx sha;
+   // static B5_tSha256Ctx sha;
     uint8_t pin[SE3_L1_PIN_SIZE];
     struct {
         const uint8_t* cc1;
@@ -452,16 +462,16 @@ uint16_t challenge(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, u
 	}
 
 	// cresp = PBKDF2(HMACSHA256, pin, sc, SE3_L1_CHALLENGE_ITERATIONS, SE3_CHALLENGE_SIZE)
-	dispatcher_handler(PBKDF2HmacSha256, pin, SE3_L1_PIN_SIZE, resp_params.sc,
-		SE3_L1_CHALLENGE_SIZE, SE3_L1_CHALLENGE_ITERATIONS, login.challenge, SE3_L1_CHALLENGE_SIZE);
+//	dispatcher_handler(PBKDF2HmacSha256, pin, SE3_L1_PIN_SIZE, resp_params.sc,
+//		SE3_L1_CHALLENGE_SIZE, SE3_L1_CHALLENGE_ITERATIONS, login.challenge, SE3_L1_CHALLENGE_SIZE);
 
-	// sresp = PBKDF2(HMACSHA256, pin, cc1, SE3_L1_CHALLENGE_ITERATIONS, SE3_CHALLENGE_SIZE)
-	dispatcher_handler(PBKDF2HmacSha256,pin, SE3_L1_PIN_SIZE, req_params.cc1,
-		SE3_L1_CHALLENGE_SIZE, SE3_L1_CHALLENGE_ITERATIONS, resp_params.sresp, SE3_L1_CHALLENGE_SIZE);
+	// sresp = PBKDF2(HMACSHA256, pin, cc1, SE3_L1_CHALLENGE_ITERATIONS, SE3_CHALLENGE_SIZE)//
+//	dispatcher_handler(PBKDF2HmacSha256,pin, SE3_L1_PIN_SIZE, req_params.cc1,
+//		SE3_L1_CHALLENGE_SIZE, SE3_L1_CHALLENGE_ITERATIONS, resp_params.sresp, SE3_L1_CHALLENGE_SIZE);
 
 	// key = PBKDF2(HMACSHA256, pin, cc2, 1, SE3_L1_PIN_SIZE)
-	dispatcher_handler(PBKDF2HmacSha256, pin, SE3_L1_PIN_SIZE, req_params.cc2,
-		SE3_L1_CHALLENGE_SIZE, 1, login.key, SE3_L1_PIN_SIZE);
+//	dispatcher_handler(PBKDF2HmacSha256, pin, SE3_L1_PIN_SIZE, req_params.cc2,
+//		SE3_L1_CHALLENGE_SIZE, 1, login.key, SE3_L1_PIN_SIZE);
 
 	login.challenge_access = req_params.access;
 

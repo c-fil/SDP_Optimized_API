@@ -34,7 +34,7 @@
 #include <se3_sdio.h>
 #include "usbd_storage_if.h"
 /* USER CODE BEGIN INCLUDE */
-#include "se3_proto.h"
+#include "../../ws/SEcubeDevBoard/Application/src/Device/se3_comm_core.h"
 /* USER CODE END INCLUDE */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY

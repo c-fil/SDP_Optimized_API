@@ -51,6 +51,14 @@ typedef struct s3_storage_range_ {
 } s3_storage_range;
 
 
+#ifndef se3_serial_def
+#define se3_serial_def
+typedef struct SE3_SERIAL_ {
+    uint8_t data[SE3_SERIAL_SIZE];
+    bool written;  ///< Indicates whether the serial number has been set (by FACTORY_INIT)
+} SE3_SERIAL;
+#endif
+
 #ifndef se3_req_resp_header_define
 #define se3_req_resp_header_define
 

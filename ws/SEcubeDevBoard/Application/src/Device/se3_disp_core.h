@@ -78,6 +78,8 @@ extern se3_algo_descriptor L1d_algo_table[SE3_ALGO_MAX];
 //} se3_flash_key;
 
 
+
+
 void dispatcher_handler(
 		int32_t algo,
 		const uint8_t *pw, size_t npw,
@@ -87,7 +89,7 @@ void dispatcher_handler(
 
 
 
-void se3_dispatcher_init();
+void se3_dispatcher_init(SE3_SERIAL* serial_disp);
 
 bool record_set(uint16_t type, const uint8_t* data);
 
