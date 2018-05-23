@@ -46,11 +46,8 @@
 #include "fmc.h"
 
 /* USER CODE BEGIN Includes */
-#include "se3c0.h"
-#include "se3c1.h"
-#include "se3_flash.h"
-#include "se3_proto.h"
-#include "se3_cmd.h"
+
+#include "se3_core.h"
 
 /* USER CODE END Includes */
 
@@ -64,7 +61,6 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 void device_init();
-void device_loop();
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -107,35 +103,21 @@ int main(void)
 	MX_CRC_Init();
 	MX_RNG_Init();
 
-	/* USER CODE BEGIN 2 */
-	device_init();
-	/* USER CODE END 2 */
 
-	/* Infinite loop */
-	//for(;;);
-	device_loop();
-	/* USER CODE END 3 */
+	device_init();
+
+	se3_core_start();
+
 	return 0;
 }
 
 
 void device_init()
 {
+	core_init();
 	se3c0_init();
 	se3_flash_init();
     se3c1_init();
-}
-
-void device_loop()
-{
-	for (;;) {
-		if (se3c0.comm.req_ready) {
-			se3c0.comm.resp_ready = false;
-            se3_cmd_execute();
-			se3c0.comm.req_ready = false;
-			se3c0.comm.resp_ready = true;
-		}
-	}
 }
 
 /** System Clock Configuration

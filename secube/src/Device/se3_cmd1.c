@@ -13,6 +13,8 @@
 #include "se3_rand.h"
 #endif
 
+
+
 #define SE3_CMD1_MAX (16)
 
 static se3_cmd_func L1d_handlers[SE3_CMD1_MAX] = {
@@ -43,7 +45,8 @@ static uint16_t L1d_error(uint16_t req_size, const uint8_t* req, uint16_t* resp_
  *  
  *  This handler also manages encryption and login token check
  */
-uint16_t L0d_cmd1(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t L0d_cmd1(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp,
+		SE3_COMM_STATUS comm, req_header req_hdr, resp_header resp_hdr)
 {
     se3_cmd_func handler = NULL;
     uint16_t resp1_size, req1_size;
@@ -86,7 +89,7 @@ uint16_t L0d_cmd1(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, ui
     if (!se3_payload_decrypt(
         &(se3c1.login.cryptoctx), req_params.auth, req_params.iv, 
         /* !! modifying request */ (uint8_t*)(req  + SE3_L1_AUTH_SIZE + SE3_L1_IV_SIZE),
-        (req_size - SE3_L1_AUTH_SIZE - SE3_L1_IV_SIZE) / SE3_L1_CRYPTOBLOCK_SIZE, se3c0.req_hdr.cmd_flags))
+        (req_size - SE3_L1_AUTH_SIZE - SE3_L1_IV_SIZE) / SE3_L1_CRYPTOBLOCK_SIZE, req_hdr.cmd_flags))
     {
         SE3_TRACE(("[L0d_cmd1] AUTH failed\n"));
         return SE3_ERR_COMM;
@@ -113,7 +116,7 @@ uint16_t L0d_cmd1(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, ui
     resp1 = resp + SE3_RESP1_OFFSET_DATA;
     resp1_size = 0;
 
-    status = handler(req1_size, req1, &resp1_size, resp1);
+    status = handler(req1_size, req1, &resp1_size, resp1, comm, req_hdr, resp_hdr);
 
     resp_params.len = resp1_size;
     resp_params.auth = resp + SE3_RESP1_OFFSET_AUTH;
@@ -139,7 +142,7 @@ uint16_t L0d_cmd1(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, ui
     else {
         memset(resp + SE3_RESP1_OFFSET_TOKEN, 0, SE3_L1_TOKEN_SIZE);
     }
-	if (se3c0.req_hdr.cmd_flags & SE3_CMDFLAG_ENCRYPT) {
+	if (req_hdr.cmd_flags & SE3_CMDFLAG_ENCRYPT) {
 		se3_rand(SE3_L1_IV_SIZE, resp_params.iv);
 	}
 	else {
@@ -147,7 +150,7 @@ uint16_t L0d_cmd1(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, ui
 	}
     se3_payload_encrypt(
         &(se3c1.login.cryptoctx), resp_params.auth, resp_params.iv,
-        resp + SE3_L1_AUTH_SIZE + SE3_L1_IV_SIZE, (*resp_size - SE3_L1_AUTH_SIZE - SE3_L1_IV_SIZE) / SE3_L1_CRYPTOBLOCK_SIZE, se3c0.req_hdr.cmd_flags);
+        resp + SE3_L1_AUTH_SIZE + SE3_L1_IV_SIZE, (*resp_size - SE3_L1_AUTH_SIZE - SE3_L1_IV_SIZE) / SE3_L1_CRYPTOBLOCK_SIZE, req_hdr.cmd_flags);
     
 
 

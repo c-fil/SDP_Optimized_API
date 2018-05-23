@@ -16,7 +16,8 @@ static uint16_t invalid_cmd_handler(uint16_t req_size, const uint8_t* req, uint1
     return SE3_ERR_CMD;
 }
 
-static uint16_t se3_exec(se3_cmd_func handler)
+static uint16_t se3_exec(se3_cmd_func handler,
+		SE3_COMM_STATUS comm, req_header req_hdr, resp_header resp_hdr)
 {
     uint16_t resp_size = 0, tmp;
     uint16_t status = SE3_OK;
@@ -27,7 +28,7 @@ static uint16_t se3_exec(se3_cmd_func handler)
 	uint16_t u16tmp;
 #endif
 
-    data_len = se3_req_len_data(se3c0.req_hdr.len);
+    data_len = se3_req_len_data(req_hdr.len);
 
 #if SE3_CONF_CRC
 	// compute CRC
@@ -42,7 +43,7 @@ static uint16_t se3_exec(se3_cmd_func handler)
 #endif
 
 	if(status == SE3_OK) {
-		status = handler(data_len, se3c0.comm.req_data, &resp_size, se3c0.comm.resp_data);
+		status = handler(data_len, comm.req_data, &resp_size, comm.resp_data, comm, req_hdr, resp_hdr);
 	}
 
     if (se3c0.hwerror) {
@@ -55,13 +56,13 @@ static uint16_t se3_exec(se3_cmd_func handler)
         resp_size = 0;
     }
 
-    se3c0.resp_hdr.status = status;
+    resp_hdr.status = status;
 
     if (resp_size <= SE3_COMM_BLOCK - SE3_RESP_SIZE_HEADER) {
         nblocks = 1;
         // zero unused memory
         memset(
-            se3c0.comm.resp_data + resp_size, 0,
+            comm.resp_data + resp_size, 0,
             SE3_COMM_BLOCK - SE3_RESP_SIZE_HEADER - resp_size);
     }
     else {
@@ -71,38 +72,38 @@ static uint16_t se3_exec(se3_cmd_func handler)
             nblocks++;
             // zero unused memory
             memset(
-                se3c0.comm.resp_data + resp_size, 0,
+                comm.resp_data + resp_size, 0,
                 (SE3_COMM_BLOCK - SE3_RESPDATA_SIZE_HEADER) - (tmp % (SE3_COMM_BLOCK - SE3_RESPDATA_SIZE_HEADER)));
         }
     }
 
-	se3c0.resp_hdr.len = se3_resp_len_data_and_headers(resp_size);
+	resp_hdr.len = se3_resp_len_data_and_headers(resp_size);
 
 #if SE3_CONF_CRC
 	u16tmp = 1;
-	SE3_SET16(se3c0.comm.resp_hdr, SE3_RESP_OFFSET_READY, u16tmp);
-	SE3_SET16(se3c0.comm.resp_hdr, SE3_RESP_OFFSET_STATUS, status);
-	SE3_SET16(se3c0.comm.resp_hdr, SE3_RESP_OFFSET_LEN, se3c0.resp_hdr.len);
-	SE3_SET32(se3c0.comm.resp_hdr, SE3_RESP_OFFSET_CMDTOKEN, se3c0.req_hdr.cmdtok[0]);
-	crc = se3_crc16_update(SE3_REQ_OFFSET_CRC, se3c0.comm.resp_hdr, 0);
+	SE3_SET16(comm.resp_hdr, SE3_RESP_OFFSET_READY, u16tmp);
+	SE3_SET16(comm.resp_hdr, SE3_RESP_OFFSET_STATUS, status);
+	SE3_SET16(comm.resp_hdr, SE3_RESP_OFFSET_LEN, resp_hdr.len);
+	SE3_SET32(comm.resp_hdr, SE3_RESP_OFFSET_CMDTOKEN, req_hdr.cmdtok[0]);
+	crc = se3_crc16_update(SE3_REQ_OFFSET_CRC, comm.resp_hdr, 0);
 	if (resp_size > 0) {
-		crc = se3_crc16_update(resp_size, se3c0.comm.resp_data, crc);
+		crc = se3_crc16_update(resp_size, comm.resp_data, crc);
 	}
-	se3c0.resp_hdr.crc = crc;
+	resp_hdr.crc = crc;
 #endif
 
     return nblocks;
 }
 
-void se3_cmd_execute()
+void se3_cmd_execute(SE3_COMM_STATUS comm, req_header req_hdr, resp_header resp_hdr)
 {
     uint16_t req_blocks = 1, resp_blocks = 1;
     size_t i;
     se3_cmd_func handler = NULL;
 	uint32_t cmdtok0;
 
-    req_blocks = se3c0.req_hdr.len / SE3_COMM_BLOCK;
-    if (se3c0.req_hdr.len % SE3_COMM_BLOCK != 0) {
+    req_blocks = req_hdr.len / SE3_COMM_BLOCK;
+    if (req_hdr.len % SE3_COMM_BLOCK != 0) {
         req_blocks++;
     }
     if (req_blocks > SE3_COMM_N - 1) {
@@ -111,14 +112,14 @@ void se3_cmd_execute()
         goto update_comm;
     }
     for (i = 1; i < req_blocks; i++) {
-        if (se3c0.req_hdr.cmdtok[i] != se3c0.req_hdr.cmdtok[i - 1] + 1) {
+        if (req_hdr.cmdtok[i] != req_hdr.cmdtok[i - 1] + 1) {
             resp_blocks = 0;
             goto update_comm;
         }
     }
 
 	if (handler == NULL) {
-		switch (se3c0.req_hdr.cmd) {
+		switch (req_hdr.cmd) {
 		case SE3_CMD0_L1:
 			handler = L0d_cmd1;
 			break;
@@ -136,18 +137,18 @@ void se3_cmd_execute()
 		}
 	}
 
-    resp_blocks = se3_exec(handler);
+    resp_blocks = se3_exec(handler, comm, req_hdr, resp_hdr);
 
     // set cmdtok
-	cmdtok0 = se3c0.req_hdr.cmdtok[0];
+	cmdtok0 = req_hdr.cmdtok[0];
     for (i = 0; i < resp_blocks; i++) {
-        se3c0.resp_hdr.cmdtok[i] = cmdtok0;
+        resp_hdr.cmdtok[i] = cmdtok0;
 		cmdtok0++;
     }
     
 
 update_comm:
     // update comm response bit map
-    se3c0.comm.resp_bmap = SE3_BMAP_MAKE(resp_blocks);
+    comm.resp_bmap = SE3_BMAP_MAKE(resp_blocks);
 }
 

@@ -12,14 +12,16 @@
 #define SE3_FLASH_SIGNATURE_SIZE  ((size_t)0x40)
 
 
-uint16_t L0d_echo(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t L0d_echo(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp,
+		SE3_COMM_STATUS comm, req_header req_hdr, resp_header resp_hdr)
 {
     memcpy(resp, req, req_size);
     *resp_size = req_size;
     return SE3_OK;
 }
 
-uint16_t L0d_factory_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t L0d_factory_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp,
+		SE3_COMM_STATUS comm, req_header req_hdr, resp_header resp_hdr)
 {
     enum {
         OFF_SERIAL = 0
@@ -45,7 +47,8 @@ uint16_t L0d_factory_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_
 }
 
 
-uint16_t L0d_bootmode_reset(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+uint16_t L0d_bootmode_reset(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp,
+		SE3_COMM_STATUS comm, req_header req_hdr, resp_header resp_hdr)
 {
 
 	if(!(se3_flash_bootmode_reset(SE3_FLASH_SIGNATURE_ADDR, SE3_FLASH_SIGNATURE_SIZE)))
