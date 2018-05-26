@@ -1,10 +1,5 @@
-/**
- *  \file se3_keys.c
- *  \author Nicola Ferri
- *  \brief Key management
- */
-
 #include "se3_keys.h"
+
 
 enum {
 	SE3_KEY_OFFSET_ID = 0,
@@ -28,6 +23,7 @@ bool se3_key_find(uint32_t id, se3_flash_it* it)
 	}
 	return false;
 }
+//TODO: UNUSED
 bool se3_key_remove(se3_flash_it* it)
 {
 	if (!se3_flash_it_delete(it)) {
@@ -91,6 +87,7 @@ bool se3_key_equal(se3_flash_it* it, se3_flash_key* key)
 	return true;
 }
 
+//TODO: UNUSED
 void se3_key_read_data(se3_flash_it* it, uint16_t data_size, uint8_t* data)
 {
 	memcpy(data, it->addr + 12, data_size);

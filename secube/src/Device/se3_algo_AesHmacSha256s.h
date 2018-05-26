@@ -1,13 +1,10 @@
-/**
- *  \file se3_algo_AesHmacSha256s.h
- *  \author Nicola Ferri
- *  \brief SE3_ALGO_AES_HMACSHA256 crypto handlers
- */
 
 #pragma once
-#include "se3c1.h"
+#include "se3_common.h"
+#include "se3_keys.h"
 
-#include "pbkdf2.h"
+#include "se3_security_core.h"
+
 
 /** \brief SE3_ALGO_AES_HMACSHA256 init handler
  *  

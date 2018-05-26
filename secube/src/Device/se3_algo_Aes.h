@@ -5,7 +5,7 @@
  */
 
 #pragma once
-#include "se3c1.h"
+#include "se3_security_core.h"
 
 /** \brief SE3_ALGO_AES init handler
  *  

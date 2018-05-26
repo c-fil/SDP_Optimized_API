@@ -1,11 +1,10 @@
-/**
- *  \file se3_memory.h
- *  \author Nicola Ferri
- *  \brief Memory management (session allocator)
- */
-
 #pragma once
-#include "se3c0.h"
+
+
+#include <stdint.h>
+#include <string.h>
+#include "se3c0def.h"
+
 
 /** \brief memory allocator structure */
 typedef struct se3_mem_ {
@@ -56,3 +55,8 @@ void se3_mem_free(se3_mem* mem, int32_t id);
 *  \param mem memory buffer object
 */
 void se3_mem_reset(se3_mem* mem);
+
+uint8_t* se3_mem_defrag(se3_mem* mem);
+
+void se3_mem_compact(uint8_t* p, uint8_t* end);
+

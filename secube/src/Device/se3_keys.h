@@ -1,15 +1,10 @@
-/**
- *  \file se3_keys.h
- *  \author Nicola Ferri
- *  \brief Key management
- */
-
 #pragma once
-#include "se3c1def.h"
-#include "se3_flash.h"
+#include "./se3_security_core.h"
+
+#define SE3_TYPE_KEY 100
 
 /** \brief Flash key structure
- *  
+ *
  *  Disposition of the fields within the flash node:
  *  0:3     id
  *  4:7     validity
@@ -20,14 +15,16 @@
  *  (12+data_size):(12+data_size+name_size-1)
  *          name
  */
+#ifndef se3_flash_key_defined
+#define se3_flash_key_defined
 typedef struct se3_flash_key_ {
-	uint32_t id;
-	uint32_t validity;
+	uint32_t id;	uint32_t validity;
 	uint16_t data_size;
 	uint16_t name_size;
 	uint8_t* data;
 	uint8_t* name;
 } se3_flash_key;
+#endif
 
 /** Flash key fields */
 enum {
@@ -50,19 +47,17 @@ enum {
 bool se3_key_find(uint32_t id, se3_flash_it* it);
 
 /** \brief Remove a key
- *  
+ *
  *  Delete a key from the flash
- *  \remark if a flash operation fails, the hwerror flag (se3c0.hwerror) is set.
  *  \param it a flash iterator pointing to the key
  *  \return true on success
  */
 bool se3_key_remove(se3_flash_it* it);
 
 /** \brief Add a new key
- *  
+ *
  *  Create a new node with the necessary amount of space for the key,
  *  then write the key.
- *  \remark if a flash operation fails, the hwerror flag (se3c0.hwerror) is set.
  *  \param it a flash iterator which will receive the position of the new node
  *  \param key a flash key structure containing the key information
  *      The data and name fields must point to a valid memory region,
@@ -72,16 +67,16 @@ bool se3_key_remove(se3_flash_it* it);
 bool se3_key_new(se3_flash_it* it, se3_flash_key* key);
 
 /** \brief Read a key
- *  
+ *
  *  Read a key from a flash node
  *  \param it a flash iterator pointing to the key
- *  \param key a flash key structure which will receive the key's information. 
+ *  \param key a flash key structure which will receive the key's information.
  *      The data and name fields will be filled only if not NULL.
  */
 void se3_key_read(se3_flash_it* it, se3_flash_key* key);
 
 /** \brief Check if key is equal
- *  
+ *
  *  Check if the supplied key is equal to a key stored in the flash.
  *  \param it a flash iterator pointing to a key
  *  \param key a flash key structure to compare
@@ -90,7 +85,7 @@ void se3_key_read(se3_flash_it* it, se3_flash_key* key);
 bool se3_key_equal(se3_flash_it* it, se3_flash_key* key);
 
 /** \brief Read data from key node
- *  
+ *
  *  Read the key's data from a ket node
  *  \param it a flash iterator pointing to the key
  *  \param data_size the number of bytes to read
@@ -99,9 +94,8 @@ bool se3_key_equal(se3_flash_it* it, se3_flash_key* key);
 void se3_key_read_data(se3_flash_it* it, uint16_t data_size, uint8_t* data);
 
 /** \brief Write key data
- *  
+ *
  *  Write key data to a flash node
- *  \remark if a flash operation fails, the hwerror flag (se3c0.hwerror) is set.
  *  \param it a flash iterator pointing to a newly created flash node of key type
  *  \param key a flash key structure containing the key information
  *      The data and name fields must point to a valid memory region,
@@ -111,7 +105,7 @@ void se3_key_read_data(se3_flash_it* it, uint16_t data_size, uint8_t* data);
 bool se3_key_write(se3_flash_it* it, se3_flash_key* key);
 
 /** \brief Produce salted key fingerprint
- *  
+ *
  *  \param key a flash key structure containing the key information
  *  \param salt a 32-byte salt
  *  \param fingerprint output 32-byte fingerprint of the key data
@@ -119,6 +113,5 @@ bool se3_key_write(se3_flash_it* it, se3_flash_key* key);
 void se3_key_fingerprint(se3_flash_key* key, const uint8_t* salt, uint8_t* fingerprint);
 
 
-#define SE3_TYPE_KEY 100
 
 
