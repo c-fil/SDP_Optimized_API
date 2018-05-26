@@ -3,7 +3,7 @@
 #include "se3_rand.h"
 ////
 //L0
-SE3_COMM_STATUS comm;
+//SE3_COMM_STATUS comm;
 req_header req_hdr;
 resp_header resp_hdr;
 
@@ -80,7 +80,7 @@ void core_init()
     memset(&serial,0,sizeof(SE3_SERIAL));
     memset(&req_hdr,0,sizeof(req_header));
     memset(&resp_hdr,0,sizeof(resp_header));
-    se3_communication_init(&comm, &req_hdr, &resp_hdr, &serial);
+    se3_communication_init( &req_hdr, &resp_hdr, &serial);
 	se3_dispatcher_init(&serial);
 
 

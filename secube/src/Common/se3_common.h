@@ -14,7 +14,29 @@
 
 extern const uint8_t se3_magic[SE3_MAGIC_SIZE];
 
+typedef struct SE3_COMM_STATUS_ {
+    // magic
+    bool magic_ready;  ///< magic written flag
+    uint32_t magic_bmap;  ///< bit map of written magic sectors
+    // block map
+    uint32_t blocks[SE3_COMM_N];  ///< map of blocks
+    uint32_t block_guess;  ///< guess for next block that will be accessed
+    bool locked;  ///< prevent magic initialization
 
+    // request
+    volatile bool req_ready;  ///< request ready flag
+    uint32_t req_bmap;  ///< map of received request blocks
+    uint8_t* req_data;  ///< received data buffer
+    uint8_t* req_hdr;   ///< received header buffer
+
+    // response
+    volatile bool resp_ready;  ///< response ready flag
+    uint32_t resp_bmap;  ///< map of sent response blocks
+    uint8_t* resp_data;  ///< buffer for data to be sent
+    uint8_t* resp_hdr;  ///< buffer for header to be sent
+} SE3_COMM_STATUS;
+
+SE3_COMM_STATUS comm;
 /**
  *  \brief Compute length of data in a request in terms of SE3_COMM_BLOCK blocks
  *  
