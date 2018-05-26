@@ -29,6 +29,9 @@ typedef struct s3_storage_range_ {
 } s3_storage_range;
 
 
+
+
+
 #ifndef se3_serial_def
 #define se3_serial_def
 typedef struct SE3_SERIAL_ {
@@ -62,6 +65,8 @@ typedef struct se3c0_resp_header_ {
 
 
 #endif
+
+
 
 const uint8_t se3_hello[SE3_HELLO_SIZE];
 

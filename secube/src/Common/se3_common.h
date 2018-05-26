@@ -14,6 +14,8 @@
 
 extern const uint8_t se3_magic[SE3_MAGIC_SIZE];
 
+
+
 typedef struct SE3_COMM_STATUS_ {
     // magic
     bool magic_ready;  ///< magic written flag
@@ -37,6 +39,7 @@ typedef struct SE3_COMM_STATUS_ {
 } SE3_COMM_STATUS;
 
 SE3_COMM_STATUS comm;
+
 /**
  *  \brief Compute length of data in a request in terms of SE3_COMM_BLOCK blocks
  *  
