@@ -80,6 +80,26 @@ typedef struct se3_payload_cryptoctx_ {
 	uint8_t hmac_key[B5_AES_256];
     uint8_t auth[B5_SHA256_DIGEST_SIZE];
 } se3_payload_cryptoctx;
+
+
+#ifndef se3_serial_def
+#define se3_serial_def
+typedef struct SE3_SERIAL_ {
+    uint8_t data[SE3_SERIAL_SIZE];
+    bool written;  ///< Indicates whether the serial number has been set (by FACTORY_INIT)
+} SE3_SERIAL;
+#endif
+
+
+
+SE3_SERIAL serial;
+
+
 void se3_payload_cryptoinit(se3_payload_cryptoctx* ctx, const uint8_t* key);
 void se3_payload_encrypt(se3_payload_cryptoctx* ctx, uint8_t* auth, uint8_t* iv, uint8_t* data, uint16_t nblocks, uint16_t flags);
 bool se3_payload_decrypt(se3_payload_cryptoctx* ctx, const uint8_t* auth, const uint8_t* iv, uint8_t* data, uint16_t nblocks, uint16_t flags);
+
+
+
+
+

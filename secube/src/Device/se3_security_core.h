@@ -35,14 +35,6 @@ typedef struct se3_flash_key_ {
 
 #endif
 
-#ifndef se3_serial_def
-#define se3_serial_def
-typedef struct SE3_SERIAL_ {
-    uint8_t data[SE3_SERIAL_SIZE];
-    bool written;  ///< Indicates whether the serial number has been set (by FACTORY_INIT)
-} SE3_SERIAL;
-#endif
-
 
 /** \brief Flash node iterator structure */
 typedef struct se3_flash_it_ {
@@ -182,5 +174,5 @@ void se3_flash_info_setup(uint32_t sector, const uint8_t* base);
  */
 bool se3_flash_bootmode_reset(uint32_t addr, size_t size);
 
-void se3_security_init(SE3_SERIAL* serial_sec);
+void se3_security_init();
 

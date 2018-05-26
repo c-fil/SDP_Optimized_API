@@ -53,13 +53,6 @@ typedef struct s3_storage_range_ {
 } s3_storage_range;
 
 
-#ifndef se3_serial_def
-#define se3_serial_def
-typedef struct SE3_SERIAL_ {
-    uint8_t data[SE3_SERIAL_SIZE];
-    bool written;  ///< Indicates whether the serial number has been set (by FACTORY_INIT)
-} SE3_SERIAL;
-#endif
 
 #ifndef se3_req_resp_header_define
 #define se3_req_resp_header_define
@@ -95,7 +88,7 @@ const uint8_t se3_hello[SE3_HELLO_SIZE];
 #define SE3_SESSIONS_MAX 100  ///< maximum number of sessions
 
 
-void se3_communication_init(req_header * req_hdr_comm, resp_header* resp_hdr_comm, SE3_SERIAL* serial_comm);
+void se3_communication_init(req_header * req_hdr_comm, resp_header* resp_hdr_comm);
 
 
 

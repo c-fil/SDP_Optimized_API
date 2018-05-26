@@ -193,9 +193,9 @@ uint16_t crypto_init(se3_mem *sessions, bool logged, uint32_t key_identificator,
 	return SE3_OK;
 }
 
-void se3_dispatcher_init(SE3_SERIAL* serial_disp){
+void se3_dispatcher_init(){
 
-	se3_security_init(serial_disp);
+	se3_security_init();
 }
 
 /*

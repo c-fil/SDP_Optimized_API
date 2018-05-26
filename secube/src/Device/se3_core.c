@@ -11,7 +11,7 @@ resp_header resp_hdr;
 
 
 ////
-SE3_SERIAL serial;
+
 
 
 static se3_cmd_func cmd_handlers[SE3_CMD_MAX] = {
@@ -80,8 +80,8 @@ void core_init()
     memset(&serial,0,sizeof(SE3_SERIAL));
     memset(&req_hdr,0,sizeof(req_header));
     memset(&resp_hdr,0,sizeof(resp_header));
-    se3_communication_init(&req_hdr, &resp_hdr, &serial);
-	se3_dispatcher_init(&serial);
+    se3_communication_init(&req_hdr, &resp_hdr);
+	se3_dispatcher_init();
 
 
 

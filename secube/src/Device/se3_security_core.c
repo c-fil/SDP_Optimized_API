@@ -5,13 +5,9 @@
 
 SE3_FLASH_INFO flash;
 
-SE3_SERIAL* serial;
-
-void se3_security_init(SE3_SERIAL* serial_sec){
-	serial = serial_sec;
+void se3_security_init(){
 	memset(&flash, 0, sizeof(SE3_FLASH_INFO));
 	se3_flash_init();
-
 	return;
 }
 
@@ -172,8 +168,8 @@ bool se3_flash_init()
 		if (it.type != 0) {
 			flash.used += it.blocks*SE3_FLASH_BLOCK_SIZE;
             if (it.type == SE3_FLASH_TYPE_SERIAL) {
-                memcpy(serial->data, it.addr, SE3_SERIAL_SIZE);
-                serial->written = true;
+                memcpy(serial.data, it.addr, SE3_SERIAL_SIZE);
+                serial.written = true;
             }
 		}
 	}

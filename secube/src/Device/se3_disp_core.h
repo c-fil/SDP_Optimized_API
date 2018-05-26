@@ -89,7 +89,7 @@ void dispatcher_handler(
 
 
 
-void se3_dispatcher_init(SE3_SERIAL* serial_disp);
+void se3_dispatcher_init();
 
 bool record_set(uint16_t type, const uint8_t* data);
 

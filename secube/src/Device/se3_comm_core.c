@@ -6,7 +6,6 @@
 
 req_header* req_hdr;
 resp_header* resp_hdr;
-SE3_SERIAL* serial;
 
 const uint8_t se3_hello[SE3_HELLO_SIZE] = {
 	'H', 'e', 'l', 'l', 'o', ' ', 'S', 'E',
@@ -15,11 +14,11 @@ const uint8_t se3_hello[SE3_HELLO_SIZE] = {
     0,0,0,0,0,0,0,0
 };
 
-void se3_communication_init(req_header * req_hdr_comm, resp_header* resp_hdr_comm, SE3_SERIAL* serial_comm){
+void se3_communication_init(req_header * req_hdr_comm, resp_header* resp_hdr_comm){
 
 	req_hdr = req_hdr_comm;
 	resp_hdr = resp_hdr_comm;
-	serial = serial_comm;
+
     memset(&comm, 0, sizeof(SE3_COMM_STATUS));
 
 //TODO: MEMSET DI QUALSIASI COSA
@@ -282,7 +281,7 @@ void handle_resp_send(int index, uint8_t* blockdata)
         // discover
         memcpy(blockdata + SE3_DISCO_OFFSET_MAGIC, se3_magic + SE3_MAGIC_SIZE / 2, SE3_MAGIC_SIZE / 2);
         memcpy(blockdata + SE3_DISCO_OFFSET_MAGIC + SE3_MAGIC_SIZE / 2, se3_magic, SE3_MAGIC_SIZE / 2);
-        memcpy(blockdata + SE3_DISCO_OFFSET_SERIAL, serial->data, SE3_SERIAL_SIZE);
+        memcpy(blockdata + SE3_DISCO_OFFSET_SERIAL, serial.data, SE3_SERIAL_SIZE);
         memcpy(blockdata + SE3_DISCO_OFFSET_HELLO, se3_hello, SE3_HELLO_SIZE);
         u16tmp = (comm.locked) ? (1) : (0);
         SE3_SET16(blockdata, SE3_DISCO_OFFSET_STATUS, u16tmp);
