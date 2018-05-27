@@ -104,6 +104,17 @@ int main(void)
 
 	/* USER CODE BEGIN 2 */
 
+	//########################DEBUG##############################
+
+	#ifdef SE3_DEBUG_SD
+	if(sd_flush()){
+			uint8_t debug_buffer1[512] = "[Main] Memory flushed!\n\0";
+			MYPRINTF(debug_buffer1,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+		}
+
+	#endif
+	//##########################################################
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */

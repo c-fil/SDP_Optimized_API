@@ -1,12 +1,5 @@
 #include "se3_comm_core.h"
 
-
-
-
-
-req_header* req_hdr;
-resp_header* resp_hdr;
-
 const uint8_t se3_hello[SE3_HELLO_SIZE] = {
 	'H', 'e', 'l', 'l', 'o', ' ', 'S', 'E',
     'c', 'u', 'b', 'e', 0, 0, 0, 0,
@@ -14,24 +7,23 @@ const uint8_t se3_hello[SE3_HELLO_SIZE] = {
     0,0,0,0,0,0,0,0
 };
 
-void se3_communication_init(req_header * req_hdr_comm, resp_header* resp_hdr_comm){
+uint8_t se3_comm_request_buffer[SE3_COMM_N*SE3_COMM_BLOCK];
+uint8_t se3_comm_response_buffer[SE3_COMM_N*SE3_COMM_BLOCK];
 
-	req_hdr = req_hdr_comm;
-	resp_hdr = resp_hdr_comm;
 
+void se3_communication_init(){
     memset(&comm, 0, sizeof(SE3_COMM_STATUS));
-
 //TODO: MEMSET DI QUALSIASI COSA
-    //comm.req_hdr = se3_comm_request_buffer;
-   // comm.req_hdr = malloc(SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
-    memset(comm.req_hdr, 0, SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
-    //comm.req_data = se3_comm_request_buffer + SE3_REQ_SIZE_HEADER;
-    comm.req_data =  comm.req_hdr + SE3_REQ_SIZE_HEADER;
-    //comm.resp_hdr = se3_comm_response_buffer;
+    comm.req_hdr = se3_comm_request_buffer;
+    //comm.req_hdr = malloc(SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
+   // memset(comm.req_hdr, 0, SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
+    comm.req_data = se3_comm_request_buffer + SE3_REQ_SIZE_HEADER;
+    //comm.req_data =  comm.req_hdr + SE3_REQ_SIZE_HEADER;
+    comm.resp_hdr = se3_comm_response_buffer;
     //comm.resp_hdr = malloc(SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
-    memset(comm.resp_hdr, 0, SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
-    //comm.resp_data = se3_comm_response_buffer + SE3_RESP_SIZE_HEADER;
-    comm.resp_data =  comm.resp_hdr + SE3_RESP_SIZE_HEADER;
+   // memset(comm.resp_hdr, 0, SE3_COMM_N*SE3_COMM_BLOCK * sizeof (uint8_t));
+    comm.resp_data = se3_comm_response_buffer + SE3_RESP_SIZE_HEADER;
+  //  comm.resp_data =  comm.resp_hdr + SE3_RESP_SIZE_HEADER;
 
     comm.magic_bmap = SE3_BMAP_MAKE(16); //set 16 LSB bit to 1
     comm.magic_ready = false;
@@ -52,79 +44,145 @@ void se3_proto_request_reset()
 }
 
 int32_t se3_proto_recv(uint8_t lun, const uint8_t* buf, uint32_t blk_addr, uint16_t blk_len)
-{
-	int32_t r = SE3_PROTO_OK;
-	uint32_t block;
-	int index;
-	const uint8_t* data = buf;
-    //uint16_t u16tmp;
+{int32_t r = SE3_PROTO_OK;
+uint32_t block;
+int index;
+const uint8_t* data = buf;
 
-	s3_storage_range range = {
-		.first = 0,
-		.count = 0
-	};
-
-	for (block = blk_addr; block < blk_addr + blk_len; block++) {
-		if (block == 0) {
-			r = se3_storage_range_add(&range, lun, (uint8_t*)data, block, range_write);
-			if (SE3_PROTO_OK != r) return r;
+s3_storage_range range = {
+	.first = 0,
+	.count = 0
+};
+block = blk_addr;
+for (block = blk_addr; block < blk_addr + blk_len; block++) {
+	if (block == 0) {
+		#ifdef SE3_DEBUG_SD
+		uint8_t debug_buffer1[512] = "[proto_recv] block = 0\n\0";
+		MYPRINTF(debug_buffer1,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+		#endif
+		r = se3_storage_range_add(&range, lun, (uint8_t*)data, block, range_write);
+		if (SE3_PROTO_OK != r){
+			#ifdef SE3_DEBUG_SD
+			uint8_t debug_buffer2[512] = "[proto_recv] SE3_PROTO_OK != r\n\0";
+			MYPRINTF(debug_buffer2,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+	#endif
+			return r;
 		}
-		else {
-            if (block_is_magic(data)) {
-                // magic block
-                if (comm.locked) {
-                    // if locked, prevent initialization
-                    continue;
-                }
-                if (comm.magic_ready) {
-                    // if magic already initialized, reset
-                    comm.magic_ready = false;
-                    comm.magic_bmap = SE3_BMAP_MAKE(16);
-                    for (index = 0; index < 16; index++)
-                        comm.blocks[index] = 0;
-                }
-                // store block in blocks map
-                index = data[SE3_COMM_BLOCK - 1];
-                comm.blocks[index] = block;
-                SE3_BIT_CLEAR(comm.magic_bmap, index);
-                if (comm.magic_bmap == 0) {
-                    comm.magic_ready = true;
-                }
+	}
+	else {
+        if (block_is_magic(data)) {
+#ifdef SE3_DEBUG_SD
+        	uint8_t debug_buffer3[512] = "[proto_recv] Block is magic\n\0";
+        	MYPRINTF(debug_buffer3,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+            // magic block
+            if (comm.locked) {
+                // if locked, prevent initialization
+#ifdef SE3_DEBUG_SD
+            	uint8_t debug_buffer4[512] = "[proto_recv] comm.locked = true\n\0";
+            	MYPRINTF(debug_buffer4,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+                continue;
             }
-            else{
-                // not a magic block
-                if (!comm.magic_ready) {
-                    // magic file has not been written yet. forward
+            if (comm.magic_ready) {
+#ifdef SE3_DEBUG_SD
+            	uint8_t debug_buffer5[512] = "[proto_recv] comm.magic_ready = true\n\0";
+            	MYPRINTF(debug_buffer5,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+                // if magic already initialized, reset
+                comm.magic_ready = false;
+                comm.magic_bmap = SE3_BMAP_MAKE(16);
+                for (index = 0; index < 16; index++)
+                    comm.blocks[index] = 0;
+            }
+            // store block in blocks map
+            index = data[SE3_COMM_BLOCK - 1];
+            comm.blocks[index] = block;
+            SE3_BIT_CLEAR(comm.magic_bmap, index);
+            if (comm.magic_bmap == 0) {
+#ifdef SE3_DEBUG_SD
+            	uint8_t debug_buffer8[512] = "[proto_recv] comm.magic bmap = 0\n\0";
+            	MYPRINTF(debug_buffer8,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+                comm.magic_ready = true;
+            }
+        }
+        else{
+            // not a magic block
+#ifdef SE3_DEBUG_SD
+        	uint8_t debug_buffer6[512] = "[proto_recv] Block is not magic\n\0";
+        	MYPRINTF(debug_buffer6,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+
+
+
+            if (!comm.magic_ready) {
+#ifdef SE3_DEBUG_SD
+            	uint8_t debug_buffer7[512] = "[proto_recv] comm.magic_ready = false\n\0";
+            	MYPRINTF(debug_buffer7,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+
+                // magic file has not been written yet. forward
+                r = se3_storage_range_add(&range, lun, (uint8_t*)data, block, range_write);
+                if (SE3_PROTO_OK != r) return r;
+            }
+            else {
+#ifdef SE3_DEBUG_SD
+            	uint8_t debug_buffer[512] = "[proto_recv] comm.magic_ready = true, may be a command! Writing magic file\n\0";
+            	MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+                // magic file has been written. may be a command
+                index = find_magic_index(block);
+                if (index == -1) {
+#ifdef SE3_DEBUG_SD
+                	uint8_t debug_buffer[512] = "[proto_recv] index = 0xFF, forwarding write operation\n\0";
+                	MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+                    // block is not a request. forward
                     r = se3_storage_range_add(&range, lun, (uint8_t*)data, block, range_write);
-                    if (SE3_PROTO_OK != r) return r;
+                    if (SE3_PROTO_OK != r)
+                    {
+#ifdef SE3_DEBUG_SD
+                    	uint8_t debug_buffer[512] = "[proto_recv] Error writing in SD card\n\0";
+                    	MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+                    	return r;
+                    }
                 }
                 else {
-                    // magic file has been written. may be a command
-                    index = find_magic_index(block);
-                    if (index == -1) {
-                        // block is not a request. forward
-                        r = se3_storage_range_add(&range, lun, (uint8_t*)data, block, range_write);
-                        if (SE3_PROTO_OK != r) return r;
+                    // block is a request
+                    if (comm.req_ready) {
+                        // already processing request. ignore
+#ifdef SE3_DEBUG_SD
+                    	uint8_t debug_buffer[512] = "[proto_recv] comm.req_ready is true, ignoring request\n\0";
+                    	MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+
+                        SE3_TRACE(("P W%02u request already fully received", (unsigned)index));
+                        continue;
                     }
                     else {
-                        // block is a request
-                        if (comm.req_ready) {
-                            // already processing request. ignore
-                            SE3_TRACE(("P W%02u request already fully received", (unsigned)index));
-                            continue;
-                        }
-                        else {
-                            handle_req_recv(index, data);
-                        }
+#ifdef SE3_DEBUG_SD
+                    	uint8_t debug_buffer[512] = "[proto_recv] comm.req_ready is false, handling request\n\0";
+                    	MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+                        handle_req_recv(index, data);
                     }
                 }
             }
-		}
-		data += SE3_COMM_BLOCK;
+        }
+//			r = se3_storage_range_add(&range, lun, (uint8_t*)data, block, range_write);
+//			if (SE3_PROTO_OK != r) return r;
 	}
+	data += SE3_COMM_BLOCK;
+}
 
-	//flush any remaining block
-	return se3_storage_range_add(&range, lun, NULL, 0xFFFFFFFF, range_write);
+//flush any remaining block
+#ifdef SE3_DEBUG_SD
+uint8_t debug_buffer_main[512] = "[proto_recv] Flushing any remaining blocks\n\0";
+MYPRINTF(debug_buffer_main,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
+return se3_storage_range_add(&range, lun, NULL, 0xFFFFFFFF, range_write);
 }
 
 int32_t se3_proto_send(uint8_t lun, uint8_t* buf, uint32_t blk_addr, uint16_t blk_len)
@@ -226,25 +284,28 @@ void handle_req_recv(int index, const uint8_t* blockdata)
 
     if (index == 0) {
         // REQ block
-
+#ifdef SE3_DEBUG_SD
+        uint8_t debug_buffer[512] = "[handle_req_recv]  Index = 0\n\0";
+        MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
         // read and decode header
         memcpy(comm.req_hdr, blockdata, SE3_REQ_SIZE_HEADER);
-        SE3_GET16(comm.req_hdr, SE3_REQ_OFFSET_CMD, req_hdr->cmd);
-        SE3_GET16(comm.req_hdr, SE3_REQ_OFFSET_CMDFLAGS, req_hdr->cmd_flags);
-        SE3_GET16(comm.req_hdr, SE3_REQ_OFFSET_LEN, req_hdr->len);
-        SE3_GET32(comm.req_hdr, SE3_REQ_OFFSET_CMDTOKEN, req_hdr->cmdtok[0]);
+        SE3_GET16(comm.req_hdr, SE3_REQ_OFFSET_CMD, req_hdr.cmd);
+        SE3_GET16(comm.req_hdr, SE3_REQ_OFFSET_CMDFLAGS, req_hdr.cmd_flags);
+        SE3_GET16(comm.req_hdr, SE3_REQ_OFFSET_LEN, req_hdr.len);
+        SE3_GET32(comm.req_hdr, SE3_REQ_OFFSET_CMDTOKEN, req_hdr.cmdtok[0]);
 #if SE3_CONF_CRC
 		SE3_GET16(comm.req_hdr, SE3_REQ_OFFSET_CRC, req_hdr->crc);
 #endif
         // read data
         memcpy(comm.req_data, blockdata + SE3_REQ_SIZE_HEADER, SE3_COMM_BLOCK - SE3_REQ_SIZE_HEADER);
 
-        nblocks = req_hdr->len / SE3_COMM_BLOCK;
-        if (req_hdr->len%SE3_COMM_BLOCK != 0) {
+        nblocks = req_hdr.len / SE3_COMM_BLOCK;
+        if (req_hdr.len%SE3_COMM_BLOCK != 0) {
             nblocks++;
         }
         if (nblocks > SE3_COMM_N - 1) {
-            resp_hdr->status = SE3_ERR_COMM;
+            resp_hdr.status = SE3_ERR_COMM;
             comm.req_bmap = 0;
             comm.resp_ready = true;
         }
@@ -253,20 +314,28 @@ void handle_req_recv(int index, const uint8_t* blockdata)
         SE3_BIT_CLEAR(comm.req_bmap, 0);
     }
     else {
+		#ifdef SE3_DEBUG_SD
+				uint8_t debug_buffer1[512] = "[handle_req_recv]  Index != 0\n\0";
+				MYPRINTF(debug_buffer1,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+		#endif
         // REQDATA block
         // read header
-        SE3_GET32(blockdata, SE3_REQDATA_OFFSET_CMDTOKEN, req_hdr->cmdtok[index]);
+        SE3_GET32(blockdata, SE3_REQDATA_OFFSET_CMDTOKEN, req_hdr.cmdtok[index]);
         // read data
         memcpy(
             comm.req_data + 1 * (SE3_COMM_BLOCK - SE3_REQ_SIZE_HEADER) + (index - 1)*(SE3_COMM_BLOCK - SE3_REQDATA_SIZE_HEADER),
             blockdata + SE3_REQDATA_SIZE_HEADER,
             SE3_COMM_BLOCK - SE3_REQDATA_SIZE_HEADER);
-        SE3_GET32(blockdata, 0, req_hdr->cmdtok[index]);
+        SE3_GET32(blockdata, 0, req_hdr.cmdtok[index]);
         // update bit map
         SE3_BIT_CLEAR(comm.req_bmap, index);
     }
 
     if (comm.req_bmap == 0) {
+#ifdef SE3_DEBUG_SD
+        uint8_t debug_buffer2[512] = "[handle_req_recv]  Ready to execute\n\0";
+        MYPRINTF(debug_buffer2,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+#endif
         comm.req_ready = true;
         comm.req_bmap = SE3_BMAP_MAKE(32);
         comm.block_guess = 0;
@@ -297,11 +366,11 @@ void handle_resp_send(int index, uint8_t* blockdata)
                     // encode and write header
                     u16tmp = 1;
                     SE3_SET16(comm.resp_hdr, SE3_RESP_OFFSET_READY, u16tmp);
-                    SE3_SET16(comm.resp_hdr, SE3_RESP_OFFSET_STATUS, resp_hdr->status);
-                    SE3_SET16(comm.resp_hdr, SE3_RESP_OFFSET_LEN, resp_hdr->len);
-                    SE3_SET32(comm.resp_hdr, SE3_RESP_OFFSET_CMDTOKEN, resp_hdr->cmdtok[0]);
+                    SE3_SET16(comm.resp_hdr, SE3_RESP_OFFSET_STATUS, resp_hdr.status);
+                    SE3_SET16(comm.resp_hdr, SE3_RESP_OFFSET_LEN, resp_hdr.len);
+                    SE3_SET32(comm.resp_hdr, SE3_RESP_OFFSET_CMDTOKEN, resp_hdr.cmdtok[0]);
 #if SE3_CONF_CRC
-                    SE3_SET16(comm.resp_hdr, SE3_RESP_OFFSET_CRC, resp_hdr->crc);
+                    SE3_SET16(comm.resp_hdr, SE3_RESP_OFFSET_CRC, resp_hdr.crc);
 #endif
                     memcpy(blockdata, comm.resp_hdr, SE3_RESP_SIZE_HEADER);
 
@@ -311,7 +380,7 @@ void handle_resp_send(int index, uint8_t* blockdata)
                 else {
                     // RESPDATA block
                     // write header
-                    SE3_SET32(blockdata, SE3_RESPDATA_OFFSET_CMDTOKEN, resp_hdr->cmdtok[index]);
+                    SE3_SET32(blockdata, SE3_RESPDATA_OFFSET_CMDTOKEN, resp_hdr.cmdtok[index]);
                     // write data
                     memcpy(
                         blockdata + SE3_RESPDATA_SIZE_HEADER,

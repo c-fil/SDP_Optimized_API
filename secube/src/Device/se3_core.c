@@ -1,17 +1,8 @@
 #include "se3_core.h"
 #include "se3c0def.h"
 #include "se3_rand.h"
-////
-//L0
-SE3_COMM_STATUS comm;
-req_header req_hdr;
-resp_header resp_hdr;
-
-
-
 
 ////
-
 
 
 static se3_cmd_func cmd_handlers[SE3_CMD_MAX] = {
@@ -54,15 +45,41 @@ uint8_t* se3_sessions_index[SE3_SESSIONS_MAX];
 
 void se3_core_start(){
 
-	while(1){
-		//wait for new request/command and execute it
-		while(!comm.req_ready);
+		#ifdef SE3_DEBUG_SD
+		uint8_t debug_buffer[512] = "[core_Start]Entering in se3_core_start..\n\0";
+		MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+		#endif
 
-		comm.resp_ready = false;
-		se3_cmd_execute();
-		comm.req_ready = false;
-		comm.resp_ready = true;
-	}
+//	while(1){
+//		//wait for new request/command and execute it
+//		while(!comm.req_ready);
+//
+//		#ifdef SE3_DEBUG_SD
+//		uint8_t debug_buffer[512] = "[core_Start] Serving new request\n\0";
+//		MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+//		#endif
+//
+//		comm.resp_ready = false;
+//		se3_cmd_execute();
+//		comm.req_ready = false;
+//		comm.resp_ready = true;
+//	}
+
+
+	for (;;) {
+			if (comm.req_ready) {
+
+				#ifdef SE3_DEBUG_SD
+				uint8_t debug_buffer[512] = "[core_Start] Serving new request (comm.req_ready = TRUE)\n\0";
+				MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+				#endif
+
+				comm.resp_ready = false;
+	            se3_cmd_execute();
+				comm.req_ready = false;
+				comm.resp_ready = true;
+			}
+		}
 
 }
 
@@ -72,15 +89,20 @@ void core_init()
     /*
      * L0 INIT
      */
-
-    time_init();
-
 	/* COMMUNICATION CORE INITIALIZATION*/
 
     memset(&serial,0,sizeof(SE3_SERIAL));
+//    int i;
+//    for (i = 0; i < SE3_SERIAL_SIZE/2; i++){
+//    	serial.data[i] = i;
+//    	serial.data[SE3_SERIAL_SIZE-i] = i;
+//    }
     memset(&req_hdr,0,sizeof(req_header));
     memset(&resp_hdr,0,sizeof(resp_header));
-    se3_communication_init(&req_hdr, &resp_hdr);
+    se3_communication_init();
+
+    time_init();
+
 	se3_dispatcher_init();
 
 
@@ -131,6 +153,11 @@ void se3_cmd_execute()
     se3_cmd_func handler = NULL;
 	uint32_t cmdtok0;
 
+	#ifdef SE3_DEBUG_SD
+	uint8_t debug_buffer5[512] = "[se3_cmd_execute]Entering in cmd_execute\n\0";
+	MYPRINTF(debug_buffer5,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+	#endif
+
     req_blocks = req_hdr.len / SE3_COMM_BLOCK;
     if (req_hdr.len % SE3_COMM_BLOCK != 0) {
         req_blocks++;
@@ -153,18 +180,38 @@ void se3_cmd_execute()
 		switch (req_hdr.cmd) {
 		case SE3_CMD_MIX:
 			handler = cmd_handlers[14];
+			#ifdef SE3_DEBUG_SD
+			uint8_t debug_buffer[512] = "[se3_cmd_execute]Switch case-> CMD_MIX..\n\0";
+			MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+			#endif
 			break;
 		case SE3_CMD_ECHO:
 			handler = cmd_handlers[11];
+			#ifdef SE3_DEBUG_SD
+			uint8_t debug_buffer1[512] = "[se3_cmd_execute]Switch case-> CMD_ECHO..\n\0";
+			MYPRINTF(debug_buffer1,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+			#endif
 			break;
 		case SE3_CMD_FACTORY_INIT:
 			handler = cmd_handlers[13];
+			#ifdef SE3_DEBUG_SD
+			uint8_t debug_buffer2[512] = "[se3_cmd_execute]Switch case-> FACTORY_INIT..\n\0";
+			MYPRINTF(debug_buffer2,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+			#endif
 			break;
 		case SE3_CMD_BOOT_MODE_RESET:
 			handler = cmd_handlers[12];
+			#ifdef SE3_DEBUG_SD
+			uint8_t debug_buffer3[512] = "[se3_cmd_execute]Switch case-> CMD_BOOT_MODE_RESET..\n\0";
+			MYPRINTF(debug_buffer3,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+			#endif
 			break;
 		default:
 			handler = invalid_cmd_handler;
+			#ifdef SE3_DEBUG_SD
+			uint8_t debug_buffer4[512] = "[se3_cmd_execute]Switch case-> invalid_cmd_handler..\n\0";
+			MYPRINTF(debug_buffer4,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+			#endif
 		}
 	}
 
@@ -189,6 +236,11 @@ uint16_t se3_exec(se3_cmd_func handler)
 	uint16_t u16tmp;
 #endif
 
+	#ifdef SE3_DEBUG_SD
+	uint8_t debug_buffer[512] = "[se3_exec] Entering in se3_exec\n\0";
+	MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+	#endif
+
     data_len = se3_req_len_data(req_hdr.len);
 
 #if SE3_CONF_CRC
@@ -204,6 +256,10 @@ uint16_t se3_exec(se3_cmd_func handler)
 #endif
 
 	if(status == SE3_OK) {
+		#ifdef SE3_DEBUG_SD
+		uint8_t debug_buffer4[512] = "[se3_exec] Entering to handler..\n\0";
+		MYPRINTF(debug_buffer4,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+		#endif
 		status = handler(data_len, comm.req_data, &resp_size, comm.resp_data);
 	}
 
@@ -251,6 +307,10 @@ uint16_t se3_exec(se3_cmd_func handler)
 	se3c0.resp_hdr.crc = crc;
 #endif
 
+	#ifdef SE3_DEBUG_SD
+	uint8_t debug_buffer4[512] = "[se3_exec]Sending back response\n\0";
+	MYPRINTF(debug_buffer4,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+	#endif
     return nblocks;
 }
 
@@ -376,6 +436,12 @@ uint16_t echo (uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8
 
 uint16_t factory_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
+
+	#ifdef SE3_DEBUG_SD
+	uint8_t debug_buffer[512] = "[factory_init] Entering in factory_init\n\0";
+	MYPRINTF(debug_buffer,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+	#endif
+
     enum {
         OFF_SERIAL = 0
     };
@@ -383,19 +449,35 @@ uint16_t factory_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size
     se3_flash_it it;
 
 	if (serial.written) {
+		#ifdef SE3_DEBUG_SD
+		uint8_t debug_buffer5[512] = "[factory_init] Serial already written\n\0";
+		MYPRINTF(debug_buffer5,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+		#endif
 		return SE3_ERR_STATE;
 	}
 
     se3_flash_it_init(&it);
     if (!se3_flash_it_new(&it, SE3_FLASH_TYPE_SERIAL, SE3_SERIAL_SIZE)) {
+		#ifdef SE3_DEBUG_SD
+		uint8_t debug_buffer4[512] = "[factory_init] Cannot create iterator\n\0";
+		MYPRINTF(debug_buffer4,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+		#endif
         return SE3_ERR_HW;
     }
     if (!se3_flash_it_write(&it, 0, serial_i, SE3_SERIAL_SIZE)) {
+		#ifdef SE3_DEBUG_SD
+		uint8_t debug_buffer3[512] = "[factory_init] Cannot write serial number\n\0";
+		MYPRINTF(debug_buffer3,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+		#endif
         return SE3_ERR_HW;
     }
 
     memcpy(serial.data, serial_i, SE3_SERIAL_SIZE);
     serial.written = true;
+	#ifdef SE3_DEBUG_SD
+	uint8_t debug_buffer2[512] = "[factory_init] Serial written.\n\0";
+	MYPRINTF(debug_buffer2,(uint32_t)(BASE_DEBUG_ADDRESS + debug_count++));
+	#endif
     return SE3_OK;
 }
 

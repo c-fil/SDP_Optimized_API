@@ -41,9 +41,6 @@ typedef struct SE3_COMM_STATUS_ {
     uint8_t* resp_hdr;  ///< buffer for header to be sent
 } SE3_COMM_STATUS;
 
-SE3_COMM_STATUS comm; //pointer to se3_core structure
-
-
 
 /** \brief SDIO read/write request buffer context */
 typedef struct s3_storage_range_ {
@@ -81,14 +78,16 @@ typedef struct se3c0_resp_header_ {
 #endif
 
 const uint8_t se3_hello[SE3_HELLO_SIZE];
-
+SE3_COMM_STATUS comm; //pointer to se3_core structure
+req_header req_hdr;
+resp_header resp_hdr;
 // ---- crypto ----
 
 #define SE3_SESSIONS_BUF (32*1024)  ///< session buffer size
 #define SE3_SESSIONS_MAX 100  ///< maximum number of sessions
 
 
-void se3_communication_init(req_header * req_hdr_comm, resp_header* resp_hdr_comm);
+void se3_communication_init();
 
 
 
@@ -111,7 +110,7 @@ int32_t se3_proto_recv(uint8_t lun, const uint8_t* buf, uint32_t blk_addr, uint1
  */
 int32_t se3_proto_send(uint8_t lun, uint8_t* buf, uint32_t blk_addr, uint16_t blk_len);
 /** \brief Check if block contains the magic sequence
- *  \param buf pointer to block data HOLAAAAAA
+ *  \param buf pointer to block data
  *  \return true if the block contains the magic sequence, otherwise false
  *
  *  Check if a block of data contains the magic sequence, used to initialize the special
@@ -157,3 +156,5 @@ void handle_req_recv(int index, const uint8_t* blockdata);
  */
 void handle_resp_send(int index, uint8_t* blockdata);
 
+extern uint8_t se3_comm_request_buffer[SE3_COMM_N*SE3_COMM_BLOCK];
+extern uint8_t se3_comm_response_buffer[SE3_COMM_N*SE3_COMM_BLOCK];

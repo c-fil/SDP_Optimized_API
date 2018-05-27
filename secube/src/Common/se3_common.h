@@ -14,8 +14,22 @@
 
 extern const uint8_t se3_magic[SE3_MAGIC_SIZE];
 
+//########################DEBUG##############################
+#define SE3_DEBUG_SD 1
 
+#ifdef SE3_DEBUG_SD
+#define BASE_DEBUG_ADDRESS 16704 //41024 //16656
 
+int debug_count;
+
+int buff_len(uint8_t* buff);
+
+bool sd_flush();
+
+bool MYPRINTF( uint8_t* buf, uint32_t blk_addr);
+
+#endif
+//##############################################################
 
 
 /**

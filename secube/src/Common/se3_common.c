@@ -6,6 +6,47 @@ const uint8_t se3_magic[SE3_MAGIC_SIZE] = {
     0x41, 0xa4, 0x32, 0xba, 0xbe, 0x54, 0x83, 0xee, 0xab, 0x6b, 0x62, 0xce, 0xf0, 0x5c, 0x7, 0x91
 };
 
+//########################DEBUG##############################
+
+#ifdef SE3_DEBUG_SD
+
+int debug_count = 0;
+
+int buff_len(uint8_t* buff){
+	int n = 0;
+	while(buff[n++]!='\0');
+	return n;
+}
+
+bool MYPRINTF( uint8_t* buf, uint32_t blk_addr){
+	bool ret;
+
+	int i,n=0;
+
+	while(buf[n++]!='\0');
+
+	for(i=n;i<512;i++)
+		buf[i]=0;
+
+	ret = secube_sdio_write(512, buf, blk_addr, 1);
+
+	return ret;
+}
+
+bool sd_flush(){
+	int i;
+	int *buf;
+	buf = calloc(512,sizeof(int));
+
+	for(i = BASE_DEBUG_ADDRESS; i < BASE_DEBUG_ADDRESS + 1963; i++)
+		if((secube_sdio_write(512, buf, i, 1)) == false)
+			return false;
+	return true;
+}
+
+#endif
+
+//############################################################################
 
 uint16_t se3_req_len_data(uint16_t len_data_and_headers)
 {
